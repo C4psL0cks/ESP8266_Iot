@@ -6,19 +6,78 @@
    Modified by Alex Willis for Instructables
 */
 
+#include <FirebaseArduino.h>
+#define FIREBASE_HOST "ledesp-5c5bb.firebaseio.com"
+#define FIREBASE_AUTH "jAzOoqwHtmqCuRm4pK2NGwq0kvdDWQ0mM2Aqrtju"
+#define WIFI_SSID "Ritmeen"
+#define WIFI_PASSWORD "0823118516"
+const int LED_PIN1 = D6;
+const int LED_PIN2 = D3;
+const int LED_PIN3 = D4;
+const int FAN_PIN = D7;
+
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
-const char* ssid = "Ritmeen";
-const char* password = "0823118516";
 MDNSResponder mdns;
-
 ESP8266WebServer server(80);
-
 IRsend irsend(4);
+
+void setup(void) {
+
+  Serial.begin(115200);
+  irsend.begin();
+  pinMode(LED_PIN1, OUTPUT);
+  pinMode(LED_PIN2, OUTPUT);
+  pinMode(LED_PIN3, OUTPUT);
+  pinMode(FAN_PIN, OUTPUT);
+
+  Serial.println(WiFi.localIP());
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+
+  if (mdns.begin("esp8266", WiFi.localIP())) {
+    Serial.println("MDNS responder started");
+  }
+
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+  Firebase.setInt("Control/LED1", 0);  // led 0 - 1
+  Firebase.setInt("Control/LED2", 0);  // led 0 - 1
+  Firebase.setInt("Control/LED3", 0);  // led 0 - 1
+  Firebase.setInt("Control/FAN", 0); // fan 0 - 0
+
+  server.on("/", handleRoot); // รอรับปุ่มกดจากหน้าเว็บ
+  server.on("/ir", handleIr); // ปุ่มถูกกด ส่งไปเช้คว่าเลขอะไร
+
+  server.on("/inline", []() {
+    server.send(200, "text/plain", "this works as well");
+  });
+
+  server.onNotFound(handleNotFound);
+  server.begin();
+  Serial.println("HTTP server started");
+}
+
+void loop(void) {
+  server.handleClient();
+  digitalWrite(LED_PIN1, Firebase.getInt("Control/LED1"));
+  digitalWrite(LED_PIN2, Firebase.getInt("Control/LED2"));
+  digitalWrite(LED_PIN3, Firebase.getInt("Control/LED3"));
+  digitalWrite(FAN_PIN, Firebase.getInt("Control/FAN"));
+  delay(100);
+
+}
 void handleRoot() {
   server.send(200, "text/html", "<html>"
               "<head><title>Add your title here</title></head>"
@@ -45,7 +104,6 @@ void handleRoot() {
               "</body>"
               "</html>");
 }
-
 void handleIr() {
   for (uint8_t i = 0; i < server.args(); i++) {
     //Serial.println(server.argName(i));
@@ -111,7 +169,6 @@ void handleIr() {
   }
   handleRoot();
 }
-
 void handleNotFound() {
   String message = "File Not Found\n\n";
   message += "URI: ";
@@ -125,43 +182,4 @@ void handleNotFound() {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
-}
-
-void setup(void) {
-  irsend.begin();
-
-  Serial.begin(115200);
-  WiFi.begin(ssid, password);
-  Serial.println("");
-
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  if (mdns.begin("esp8266", WiFi.localIP())) {
-    Serial.println("MDNS responder started");
-  }
-
-  server.on("/", handleRoot);
-  server.on("/ir", handleIr);
-
-  server.on("/inline", []() {
-    server.send(200, "text/plain", "this works as well");
-  });
-
-  server.onNotFound(handleNotFound);
-
-  server.begin();
-  Serial.println("HTTP server started");
-}
-
-void loop(void) {
-  server.handleClient();
 }
