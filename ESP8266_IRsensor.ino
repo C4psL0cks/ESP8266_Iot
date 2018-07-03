@@ -7,10 +7,10 @@
 */
 
 #include <FirebaseArduino.h>
-#define FIREBASE_HOST "ledesp-5c5bb.firebaseio.com"
-#define FIREBASE_AUTH "jAzOoqwHtmqCuRm4pK2NGwq0kvdDWQ0mM2Aqrtju"
-#define WIFI_SSID "Ritmeen"
-#define WIFI_PASSWORD "0823118516"
+#define FIREBASE_HOST "xx"
+#define FIREBASE_AUTH "xxx"
+#define WIFI_SSID "xxx"
+#define WIFI_PASSWORD "xxx"
 const int LED_PIN1 = D6;
 const int LED_PIN2 = D3;
 const int LED_PIN3 = D4;
