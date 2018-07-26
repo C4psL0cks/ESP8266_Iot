@@ -1,4 +1,6 @@
 //Blynk
+#include <TridentTD_LineNotify.h>
+
 #define BLYNK_PRINT Serial
 #include <BlynkSimpleEsp8266.h>
 #define BLYNK_MAX_SENDBYTES 256
@@ -39,6 +41,9 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println();
+   Serial.println(LINE.getVersion());
+  LINE.setToken(LINE_TOKEN);
+  
   pinMode(led, OUTPUT);
   led1.off();
 
@@ -139,9 +144,11 @@ BLYNK_WRITE(V1) {
   buttonStatelock = param.asInt();
   if (buttonStatelock == 0) {
     ledon();
+    LINE.notify(" 1 : ON");
   }
   if (buttonStatelock == 1) {
     ledoff();
+    LINE.notify(" 1 : OFF");
   }
 }
 void loop() {
