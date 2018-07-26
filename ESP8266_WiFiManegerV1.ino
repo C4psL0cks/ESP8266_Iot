@@ -8,6 +8,8 @@
 #include <WiFiManager.h>
 #include <ArduinoJson.h>
 
+#include <TridentTD_LineNotify.h>
+
 WiFiManager wifiManager;
 
 char blynk_token[35] = "";
@@ -29,6 +31,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println();
+  Serial.println(LINE.getVersion());
+  LINE.setToken(LINE_TOKEN);
 
   //clean FS, for testing
   SPIFFS.format();
@@ -165,14 +169,10 @@ void setup() {
 BLYNK_WRITE(V1) {
   buttonStatelock = param.asInt();
   if (buttonStatelock == 0) {
-    String message = "OFF";
-    Line_Notify(message);
-    Serial.println(message);
+   LINE.notify(" 1 : OFF");
   }
   else if (buttonStatelock == 1) {
-    String message = "ON";
-    Line_Notify(message);
-    Serial.println(message);
+    LINE.notify(" 1 : ON");
   }
 }
 
@@ -182,37 +182,4 @@ void loop() {
   Blynk.virtualWrite(10, buttonStatelock);
   Blynk.virtualWrite(11, door);
 
-}
-void Line_Notify(String message) {
-  WiFiClientSecure client;
-
-  if (!client.connect("notify-api.line.me", 443)) {
-    Serial.println("connection failed");
-    return;
-  }
-
-  String req = "";
-  req += "POST /api/notify HTTP/1.1\r\n";
-  req += "Host: notify-api.line.me\r\n";
-  req += "Authorization: Bearer " + String(line_token) + "\r\n";
-  req += "Cache-Control: no-cache\r\n";
-  req += "User-Agent: ESP8266\r\n";
-  req += "Content-Type: application/x-www-form-urlencoded\r\n";
-  req += "Content-Length: " + String(String("message=" + message).length()) + "\r\n";
-  req += "\r\n";
-  req += "message=" + message;
-  Serial.println(req);
-  client.print(req);
-
-  delay(20);
-
-  // Serial.println("-------------");
-  while (client.connected()) {
-    String line = client.readStringUntil('\n');
-    if (line == "\r") {
-      break;
-    }
-    //Serial.println(line);
-  }
-  // Serial.println("-------------");
 }
