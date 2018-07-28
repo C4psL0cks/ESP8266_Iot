@@ -25,20 +25,18 @@
 
 ทำการ Log in ที่ https://notify-bot.line.me/en/
 
-  ![Linenotify.png](Linenotify.png)
+
 
 
 
 จากนั้น เข้าไปที่ https://notify-bot.line.me/my/  เพื่อทำการ สร้าง Line Token ขึ้นมา
 ให้กดปุ่ม **Generate token**
 
-![CreateLineToken.png](CreateLineToken.png)
 
 
 ตั้งชื่อ Token อะไรก็ได้
 พร้อมทั้งเลือก กลุ่มใน Line ที่ต้องการให้มีการแจ้งเตือนไปยังกลุ่ม
 
-![CreateNotifyNameSelectGroup.png](CreateNotifyNameSelectGroup.png)
 
 
 
