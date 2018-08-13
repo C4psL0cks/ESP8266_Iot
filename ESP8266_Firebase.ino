@@ -1,22 +1,18 @@
-#include <FirebaseArduino.h>
 #include <ESP8266WiFi.h>
+#include <FirebaseArduino.h>
 
-// Config Firebase
-#define FIREBASE_HOST "xxx"
-#define FIREBASE_AUTH "xxx"
-
-// Config connect WiFi
-#define WIFI_SSID "xxx"
-#define WIFI_PASSWORD "xxx"
-
-
-const int LED_PIN = D6;
-const int FAN_PIN = D7;
-
+// Set these to run example.
+#define FIREBASE_HOST "xx"
+#define FIREBASE_AUTH "xx"
+#define WIFI_SSID "xxxxx"
+#define WIFI_PASSWORD "xxxx"
+String getuid = "xxxx";
+int OTP, OTPS;
+int state = false;
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println(WiFi.localIP());
+  Serial.begin(115200);
+
+  // connect to wifi.
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("connecting");
   while (WiFi.status() != WL_CONNECTED) {
@@ -27,26 +23,28 @@ void setup() {
   Serial.print("connected: ");
   Serial.println(WiFi.localIP());
 
-  pinMode(LED_PIN, OUTPUT);
-  pinMode(FAN_PIN, OUTPUT);
-
+  Serial.printf(" ESP8266 Chip id = %08X\n", ESP.getChipId());
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-  Firebase.setInt("Control/LED", 0);  // led 0 - 1
-  Firebase.setInt("Control/FAN", 0); // fan 0 - 0
 
 }
-
 void loop() {
-  // put your main code here, to run repeatedly:
-  //1 = HIGH
-  //0 = LOW
-  //digitalWrite(LED_PIN,HIGH); //1
-  //digitalWrite(LED_PIN,LOW); //0
-  //Firebase.getInt("Control/LED") = 1
-  //digitalWrite(LED_PIN,1)
-  //digitalWrite(LED_PIN,HIGH); //1
-  
-  digitalWrite(LED_PIN, Firebase.getInt("Control/LED"));
-  digitalWrite(FAN_PIN, Firebase.getInt("Control/FAN"));
-  delay(200);
+
+  if (Firebase.getString("/user/" + getuid + "/uid") == getuid) {
+    Serial.println(Firebase.getString("/user/" + uid));
+    Firebase.setInt("/user/" + uid + "/OTP", ESP.getChipId());
+    state = true;
+  }
+  if (state == true) {
+    if (Firebase.getInt("/user/" + uid + "/OTP") == Firebase.getInt("/user/" + uid + "/OTPS")) {
+      Serial.println("OTP OK");
+    }
+    else {
+      Serial.println("OTP unknow");
+    }
+  }
+  if (Firebase.failed()) {
+    Serial.print("GET / failed:");
+    Serial.println(Firebase.error());
+    return;
+  }
 }
