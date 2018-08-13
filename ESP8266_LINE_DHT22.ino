@@ -1,18 +1,21 @@
-void Line_Notify(String message);
 #include "DHT.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
+#include <TridentTD_LineNotify.h>
 
 #define DHTPIN 4
 #define DHTTYPE DHT22
-#define LINE_TOKEN "o6XCVFsZPvqhL4qNykWUcs8W7z4fMwjfa1gRdrB9MEi"
+#define LINE_TOKEN "xxxx"
 DHT dht(DHTPIN, DHTTYPE);
 
 const char* WIFI_SSID = "xxx";
 const char* WIFI_PASS = "xxx";
 
+int timeSinceLastRead = 0;
+
 WiFiClientSecure wifiClient;
+
 void setup() {
   Serial.begin(9600);
   // Connect to Wifi.
@@ -35,6 +38,8 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   Serial.println();
+  LINE.setToken(LINE_TOKEN);
+  Serial.println(LINE.getVersion());
 
   Serial.println("Device Started");
   Serial.println("-------------------------------------");
@@ -42,30 +47,20 @@ void setup() {
   Serial.println("-------------------------------------");
 
 }
-
-int timeSinceLastRead = 0;
 void loop() {
 
-  // Report every 2 seconds.
   if (timeSinceLastRead > 2000) {
-    // Reading temperature or humidity takes about 250 milliseconds!
-    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+
     float h = dht.readHumidity();
-    // Read temperature as Celsius (the default)
     float t = dht.readTemperature();
-    // Read temperature as Fahrenheit (isFahrenheit = true)
     float f = dht.readTemperature(true);
 
-    // Check if any reads failed and exit early (to try again).
     if (isnan(h) || isnan(t) || isnan(f)) {
       Serial.println("Failed to read from DHT sensor!");
       timeSinceLastRead = 0;
       return;
     }
-
-    // Compute heat index in Fahrenheit (the default)
     float hif = dht.computeHeatIndex(f, h);
-    // Compute heat index in Celsius (isFahreheit = false)
     float hic = dht.computeHeatIndex(t, h, false);
 
     Serial.print("Humidity: ");
@@ -103,33 +98,17 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
   JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
   Serial.println(JSONmessageBuffer);
   String message = JSONmessageBuffer;
-  Line_Notify(message);
-}
-void Line_Notify(String message) {
-  WiFiClientSecure client;
 
-  if (!client.connect("notify-api.line.me", 443)) {
-    Serial.println("connection failed");
-    return;
+  if (message != NULL) {
+
+    LINE.notify("DHT22");
+    LINE.notify(message);
+    LINE.notifySticker(3, 240);
+    LINE.notifySticker("Hello", 1, 2);
+    LINE.notifyPicture("https://xxx.jpg");
+    LINE.notifyPicture("xxxx", "https://xxx.jpg");
   }
-  String req = "";
-  req += "POST /api/notify HTTP/1.1\r\n";
-  req += "Host: notify-api.line.me\r\n";
-  req += "Authorization: Bearer " + String(LINE_TOKEN) + "\r\n";
-  req += "Cache-Control: no-cache\r\n";
-  req += "User-Agent: ESP8266\r\n";
-  req += "Connection: close\r\n";
-  req += "Content-Type: application/x-www-form-urlencoded\r\n";
-  req += "Content-Length: " + String(String("message=" + message).length()) + "\r\n";
-  req += "\r\n";
-  req += "message=" + message;
-  // Serial.println(req);
-  client.print(req);
-  delay(20);
-  while (client.connected()) {
-    String line = client.readStringUntil('\n');
-    if (line == "\r") {
-      break;
-    }
-  }
+  delay(3000);
+
 }
+
