@@ -2,8 +2,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
-#include "ThingSpeak.h"
-#include <TridentTD_LineNotify.h>
 
 #define DHTPIN D4
 #define DHTTYPE DHT22
@@ -12,9 +10,7 @@ DHT dht(DHTPIN, DHTTYPE);
 int timeSinceLastRead = 0;
 const char* WIFI_SSID = "6021607";
 const char* WIFI_PASS = "17401449";
-unsigned long myChannelNumber = 495104;
-const char * myWriteAPIKey = "13GJ1GJ1VIX8KXQQ";
-#define LINE_TOKEN "lTdXXOfUCH00vgQWgjRNdt83bVptSk0yQysFezcVIvp"
+
 WiFiClient client;
 
 void setup() {
@@ -39,9 +35,6 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   Serial.println();
-  LINE.setToken(LINE_TOKEN);
-  Serial.println(LINE.getVersion());
-  ThingSpeak.begin(client);
   dht.begin();
 }
 void loop() {
@@ -63,12 +56,6 @@ void loop() {
     Serial.print("Heat index: "); Serial.print(hic); Serial.print(" *C ");
     Serial.print(hif); Serial.println(" *F");
 
-    ThingSpeak.writeField(myChannelNumber, 1, Temperature, myWriteAPIKey);
-    ThingSpeak.writeField(myChannelNumber, 2, Humidity, myWriteAPIKey);
-
-    if (Temperature > 35) {
-      LINE.notify("Alert now temp so hot is" + String(Temperature));
-    }
     report(Humidity , Temperature, Fahrenheit, hic, hif);
     timeSinceLastRead = 0;
   }
