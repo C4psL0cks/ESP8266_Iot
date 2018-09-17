@@ -5,62 +5,65 @@
 #include <WiFiManager.h>
 #include <ArduinoJson.h>
 #include <TridentTD_LineNotify.h>
+#include <Wire.h>
+#include "Adafruit_MCP23017.h"
+#include <SPI.h>
+#include <PN532_SPI.h>
+#include "PN532.h"
 #include <BlynkSimpleEsp8266.h>
 #define BLYNK_PRINT Serial
 #define BLYNK_MAX_SENDBYTES 256
 #define closed 0
 #define opened 1
+#define VT_PIN A0
+#define AT_PIN A0
+#define ARDUINO_WORK_VOLTAGE 3.3
+#define LedGpioPinRed 8
+#define LedGpioPinBlue 9
+#define RelayGpioPin 10
+#define DoorGpioPin 11
+#define BuzzerGpioPin 12
+#define DoorUnLockGpioPin 13
 
-#include <Wire.h>
-#include "Adafruit_MCP23017.h"
 Adafruit_MCP23017 mcp;
-
-#include <SPI.h>
-#include <PN532_SPI.h>
-#include "PN532.h"
 PN532_SPI pn532spi(SPI, 16);
 PN532 nfc(pn532spi);
-uint8_t currentblock = 1; // block write select
-uint8_t data[20];         // block write data
-
-#define VT_PIN A0 // connect VT
-#define AT_PIN A0// connect AT
-#define ARDUINO_WORK_VOLTAGE 3.3
 
 WiFiManager wifiManager;
-
-WidgetLED ChanalOneLedopen(V1);
-WidgetLED ChanalOneLedclose(V2);
 BLYNK_CONNECTED() {
-  Blynk.syncVirtual(V0);
+  Blynk.syncVirtual(V0); // switch
+  Blynk.syncVirtual(V1); // led status close
+  Blynk.syncVirtual(V2); // led status open
+  Blynk.syncVirtual(V3); // volt
+  Blynk.syncVirtual(V4); // timer
+  Blynk.syncVirtual(V5); // door status
+  Blynk.syncVirtual(V6); // lock status
 }
-bool shouldSaveConfig = false;
-const int LedGpioPinRed = 8;
-const int LedGpioPinBlue = 9;
-const int RelayGpioPin = 10;
-const int DoorGpioPin = 11;
-const int BuzzerGpioPin = 12;
-const int DoorUnLockGpioPin = 13;
-int ButtonStatelock = 0;
-int DoorState = 0;   //Doorstate
-int Door = 0;                         // Start 0
-int Relay = 0;                       // Start 0
-int Keycard = 2;                      // Start 2
-int App = 2;
+WidgetLED Ledclose(V1);
+WidgetLED Ledopen(V2);
 
+uint8_t currentblock = 1;             // block write select
+uint8_t data[20];                     // block write data
+bool shouldSaveConfig = false;
+int ButtonStatelock;
+int DoorState = 0;
+int Door = 0;
+int Relay = 0;
+int Keycard = 2;
+int vt_temp;
+double voltage;
 char blynk_token[35] = "";
 char line_token[45] = "";
 char name_device[35] = "";
 char ssid[20] = "";
 char pass[20] = "";
 
-void saveConfigCallback () {
-  Serial.println("Should save config");
-  shouldSaveConfig = true;
-}
 void setup() {
 
   Serial.begin(115200);
+
+  SPIFFS.format();
+
   mcp.begin();
   mcp.pinMode(LedGpioPinRed, OUTPUT);
   mcp.pinMode(LedGpioPinBlue, OUTPUT);
@@ -70,11 +73,6 @@ void setup() {
   mcp.pullUp(DoorGpioPin, HIGH);
   mcp.pinMode(DoorUnLockGpioPin, INPUT);
   mcp.pullUp(DoorUnLockGpioPin, HIGH);
-  ChanalOneLedopen.off();
-  ChanalOneLedclose.off();
-
-  //clean FS, for testing
-  SPIFFS.format();
 
   Serial.println("mounting FS...");
   if (SPIFFS.begin()) {
@@ -111,7 +109,6 @@ void setup() {
   wifiManager.addParameter(&custom_line_token);
   wifiManager.addParameter(&custom_name_device);
 
-  //reset settings - for testing
   wifiManager.resetSettings();
 
   if (!wifiManager.autoConnect("SMART LOCK ALERT")) {
@@ -142,59 +139,113 @@ void setup() {
   Serial.println(WiFi.localIP());
   Blynk.begin(blynk_token, ssid, pass);
   LINE.setToken(line_token);
+
   nfc.begin();
   nfc.SAMConfig();
   Serial.println("Waiting for Card ...");
 }
-BLYNK_WRITE(V0) {
-  ButtonStatelock = param.asInt();
-  if (ButtonStatelock == 0) {
-    Relayopen();
-    App = 0;
-    Door = 0;
-    ChanalOneLedopen.on();
-    LINE.notify(String(name_device) + ": Open");
-  }
-  if (ButtonStatelock == 1) {
-    Relayclose();
-    App = 1;
-    Door = 1;
-    ChanalOneLedclose.on();
-    LINE.notify(String(name_device) + ": Close");
-  }
-}
 void loop() {
 
   Blynk.run();
-  int vt_temp = analogRead(VT_PIN);
-  int at_temp = analogRead(AT_PIN);
-  double voltage = vt_temp * (ARDUINO_WORK_VOLTAGE / 1023.0) * 5;
-  Blynk.virtualWrite(3, voltage);
-  double current = at_temp * (ARDUINO_WORK_VOLTAGE / 1023.0);
-  Blynk.virtualWrite(4, current);
-  Blynk.virtualWrite(10, ButtonStatelock);
-  Blynk.virtualWrite(11, Door);
+  vt_temp = analogRead(VT_PIN);
+  voltage = vt_temp * (ARDUINO_WORK_VOLTAGE / 1023.0) * 5;
+  Blynk.virtualWrite(V3, voltage); // volt
+  Blynk.virtualWrite(V5, Door);   // door status
+  Blynk.virtualWrite(V6, Relay);  // lock status
 
   RFID();
 
-  if (mcp.digitalRead(DoorGpioPin) == HIGH && DoorState == opened) {
+  if (mcp.digitalRead(DoorGpioPin) == LOW && DoorState == opened) { // ปิดประตู
     DoorState = closed;
     Door = 0;
-    //Buzzeroff();
-    //LedBlueon();
-    //LedRedoff();
-    Serial.println("Close");
-    //LINE.notify("Chanal" + String(name_device) + "DoorClose");
+    Buzzeroff();
+    LedBlueon();
+    LedRedoff();
+    LINE.notify(String(name_device) + "-->DOORCLOSE!!");
+    Serial.println("CLOSE");
   }
-  if (mcp.digitalRead(DoorGpioPin) == LOW && DoorState == closed) {
+  if (mcp.digitalRead(DoorGpioPin) == HIGH && DoorState == closed) { // เปิดประตู
     DoorState = opened;
     Door = 1;
-    //Buzzeron();
-    //LedRedon();
-    //LedBlueoff();
-    Serial.println("Open");
-    //LINE.notify("Chanal" + String(name_device) + "DoorClose");
+    Buzzeron();
+    LedRedon();
+    LedBlueoff();
+    LINE.notify(String(name_device) + "-->DOOROPEN!!");
+    Serial.println("OPEN");
   }
+}
+//// Normal
+BLYNK_WRITE(V0) {
+  ButtonStatelock = param.asInt();
+  if (ButtonStatelock == 1) {
+    Relayclose();
+    Door = 0;
+    LedRedon();
+    LedBlueoff();
+    LINE.notify(String(name_device) + "-->DOORCLOSE!!");
+  }
+  if (ButtonStatelock == 0) {
+    Relayopen();
+    Door = 1;
+    LedBlueon();
+    LedRedoff();
+    LINE.notify(String(name_device) + "-->DOOROPEN!!");
+  }
+}
+//// timer
+BLYNK_WRITE(V4) {
+  ButtonStatelock = param.asInt();
+  if (ButtonStatelock == 1) {
+    Relayclose();
+    Door = 0;
+    LedRedon();
+    LedBlueoff();
+    LINE.notify(String(name_device) + " CLOSE");
+  }
+  if (ButtonStatelock == 0) {
+    Relayopen();
+    Door = 1;
+    LedBlueon();
+    LedRedoff();
+    LINE.notify(String(name_device) + " OPEN");
+  }
+}
+void Relayclose() {
+  Relay = 0;
+  mcp.digitalWrite(RelayGpioPin, LOW); // ทำงาน ปิดประตู
+}
+void Relayopen() {
+  Relay = 1;
+  mcp.digitalWrite(RelayGpioPin, HIGH); // ไม่ทำงาน เปิดประตู
+}
+void Buzzeron() {
+  mcp.digitalWrite(BuzzerGpioPin, HIGH);
+  delay(200);
+  mcp.digitalWrite(BuzzerGpioPin, LOW);
+  delay(200);
+}
+void Buzzeroff() {
+  mcp.digitalWrite(BuzzerGpioPin, LOW);
+}
+void LedRedon() {
+  Ledopen.on();
+  mcp.digitalWrite(LedGpioPinRed, HIGH);
+}
+void LedRedoff() {
+  Ledopen.off();
+  mcp.digitalWrite(LedGpioPinRed, LOW);
+}
+void LedBlueon() {
+  Ledclose.on();
+  mcp.digitalWrite(LedGpioPinBlue, HIGH);
+}
+void LedBlueoff() {
+  Ledclose.off();
+  mcp.digitalWrite(LedGpioPinBlue, LOW);
+}
+void saveConfigCallback () {
+  Serial.println("Should save config");
+  shouldSaveConfig = true;
 }
 void RFID() {
   uint8_t success;
@@ -246,33 +297,4 @@ void RFID() {
     Serial.println("**Start Wait key Card **");
   }
   delay(500);
-}
-void Relayopen() {
-  Relay = 1;
-  mcp.digitalWrite(RelayGpioPin, LOW);
-}
-void Relayclose() {
-  Relay = 0;
-  mcp.digitalWrite(RelayGpioPin, HIGH);
-}
-void LedRedon() {
-  mcp.digitalWrite(LedGpioPinRed, HIGH);
-}
-void LedRedoff() {
-  mcp.digitalWrite(LedGpioPinRed, LOW);
-}
-void LedBlueon() {
-  mcp.digitalWrite(LedGpioPinBlue, HIGH);
-}
-void LedBlueoff() {
-  mcp.digitalWrite(LedGpioPinBlue, LOW);
-}
-void Buzzeron() {
-  mcp.digitalWrite(BuzzerGpioPin, HIGH);
-  delay(200);
-  mcp.digitalWrite(BuzzerGpioPin, LOW);
-  delay(200);
-}
-void Buzzeroff() {
-  mcp.digitalWrite(BuzzerGpioPin, LOW);
 }

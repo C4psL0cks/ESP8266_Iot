@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 
-#define WIFI_SSID       "xxxx"
-#define WIFI_PASSWORD   "xxxxx"
+#define WIFI_SSID       "6021607"
+#define WIFI_PASSWORD   "17401449"
 
 void setup() {
   Serial.begin(9600);
@@ -22,4 +22,3 @@ void setup() {
 void loop() {
   // Do something
 }
-
