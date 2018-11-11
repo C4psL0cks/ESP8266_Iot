@@ -17,7 +17,7 @@ int timeSinceLastRead = 0;
 WiFiClientSecure wifiClient;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   // Connect to Wifi.
   Serial.println();
   Serial.print("Connecting to ");
