@@ -39,7 +39,7 @@ void connect()
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.setTimeout(2000);
   pinMode(LEDPIN,OUTPUT);
   digitalWrite(LEDPIN,LOW);
