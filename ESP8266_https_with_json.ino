@@ -2,8 +2,8 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char* WIFI_SSID = "6021607";
-const char* WIFI_PASS = "17401449";
+const char* WIFI_SSID = "xxxxx";
+const char* WIFI_PASS = "xxxxx";
 
 void connect() {
   // Connect to Wifi.
@@ -48,7 +48,7 @@ void connect() {
 }
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.setTimeout(2000);
   while (!Serial) { }
 
