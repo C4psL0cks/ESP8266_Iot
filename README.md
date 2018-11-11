@@ -29,9 +29,9 @@
 ---------------------------------------------
 
 Rf.
-https://arduino-esp8266.readthedocs.io/en/latest/index.html
-https://github.com/esp8266
-https://firebase-arduino.readthedocs.io/en/latest/
+- https://arduino-esp8266.readthedocs.io/en/latest/index.html
+- https://github.com/esp8266
+- https://firebase-arduino.readthedocs.io/en/latest/
 
 Version
 =========
