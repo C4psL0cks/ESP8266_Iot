@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
-#define WIFI_SSID       "MyHomeWifi"
-#define WIFI_PASSWORD   "1234567890"
+#define WIFI_SSID       "6021607"
+#define WIFI_PASSWORD   "17401449"
 
 void setup() {
   Serial.begin(9600);
