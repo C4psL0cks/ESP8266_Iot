@@ -23,12 +23,15 @@ uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };
 uint8_t uidLength;
 bool Keycard = false;
 bool state = false;
-
+String chipid = "";
+String battery = "90";
 WiFiManager wifiManager;
 bool shouldSaveConfig = false;
 char token[35] = "";
 char line_token[45] = "";
 char name_device[35] = "";
+String value = "";
+String values = "";
 
 void saveConfigCallback () {
   Serial.println("Should save config");
@@ -111,18 +114,18 @@ void setup() {
 }
 void loop() {
 
-  if (Firebase.getString("/user/token") == token) {
-    state = true;
+  chipid = ESP.getChipId();
+  Firebase.setString("/device/" + chipid + "/battery", battery);
+  value = Firebase.getString("/device/" + chipid + "/lastunlock");
+  if (values == "") {
+    values = value;
   }
-  if (state == true) {
-    RFID();
-    Serial.println("OTP OK");
+  if (value != values) {
+
+    state = !state;
+    values = value;
   }
-  if (Firebase.failed()) {
-    Serial.print("GET / failed:");
-    Serial.println(Firebase.error());
-    return;
-  }
+  Serial.println(state);
 }
 void RFID() {
   success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
