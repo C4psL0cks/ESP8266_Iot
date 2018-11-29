@@ -2,10 +2,10 @@
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
  
-const char* ssid = "ehlab";
-const char* password = "raniraja1";
+const char* ssid = "xxxxx";
+const char* password = "xxxxx";
 const int DoorGpioPin = 5; // D1 of Node MCU
-const int ledGpioPin =4;
+const int ledGpioPin = 4;
 int doorState=0;
 int ledState=0;
 #define closed 0
