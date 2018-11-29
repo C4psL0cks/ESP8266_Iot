@@ -21,7 +21,6 @@ void loop() {
 
   if (isnan(h) || isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
-
   }
   OLED.clearDisplay();               //Clear display
   OLED.setTextColor(WHITE);          //Set text color
@@ -38,7 +37,6 @@ void loop() {
   delay(5000);
   OLED.clearDisplay();               //Clear display
   
-
 }
 
 
