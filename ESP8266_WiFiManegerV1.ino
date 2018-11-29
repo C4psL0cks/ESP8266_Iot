@@ -146,8 +146,6 @@ void setup() {
     json["blynk_token"] = blynk_token;
     json["line_token"] = line_token;
 
-
-
     File configFile = SPIFFS.open("/config.json", "w");
     if (!configFile) {
       Serial.println("failed to open config file for writing");
