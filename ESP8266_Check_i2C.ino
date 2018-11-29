@@ -1,17 +1,11 @@
 // I2C Scanner
 // Written by Nick Gammon
 // Date: 20th April 2011
-
 #include <Wire.h>
-
 void setup() {
   Serial.begin (115200);
-
   // Leonardo: wait for serial port to connect
-  while (!Serial)
-  {
-  }
-
+  while (!Serial){}
   Serial.println ();
   Serial.println ("I2C scanner. Scanning ...");
   byte count = 0;
