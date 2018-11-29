@@ -1,9 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <time.h>
-
 //const char* WIFI_SSID = "6021607";             // SSID is set
 //const char* WIFI_PASSWORD = "17401449";     // Password is set
-
 #define WIFI_SSID  "6021607"
 #define WIFI_PASSWORD "17401449"
 
