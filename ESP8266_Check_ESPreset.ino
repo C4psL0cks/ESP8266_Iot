@@ -6,7 +6,6 @@ extern "C" {
 }
 #endif
 
-
 void setup() {
   rst_info *rsti;
 
@@ -30,5 +29,4 @@ void setup() {
 }
 
 void loop() {
-
 }
