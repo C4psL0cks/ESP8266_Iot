@@ -4,17 +4,15 @@
 #include <ArduinoJson.h>
 #include "ThingSpeak.h"
 #include <TridentTD_LineNotify.h>
-
 #define DHTPIN D4
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
-
 int timeSinceLastRead = 0;
 const char* WIFI_SSID = "6021607";
 const char* WIFI_PASS = "17401449";
 unsigned long myChannelNumber = 495104;
 const char * myWriteAPIKey = "13GJ1GJ1VIX8KXQQ";
-#define LINE_TOKEN "lTdXXOfUCH00vgQWgjRNdt83bVptSk0yQysFezcVIvp"
+#define LINE_TOKEN "xxxxx"
 WiFiClient client;
 
 void setup() {
