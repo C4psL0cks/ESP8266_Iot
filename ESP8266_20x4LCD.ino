@@ -7,9 +7,6 @@ void setup() {
   lcd.begin();
 }
 void loop() {
-
-  //// time //////
   lcd.setCursor(0, 2);
   lcd.print("Nodemcu test LED");
-
 }
