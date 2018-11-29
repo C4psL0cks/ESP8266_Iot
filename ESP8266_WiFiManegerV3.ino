@@ -1,6 +1,5 @@
 //Blynk
 #include <TridentTD_LineNotify.h>
-
 #define BLYNK_PRINT Serial
 #include <BlynkSimpleEsp8266.h>
 #define BLYNK_MAX_SENDBYTES 256
