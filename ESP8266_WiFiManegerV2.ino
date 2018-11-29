@@ -129,7 +129,7 @@ void setup() {
   Serial.println("local ip");
   Serial.println(WiFi.localIP());
 
-  Blynk.begin(blynk_token, ssid, pass); //
+  //Blynk.begin(blynk_token, ssid, pass); //
   Blynk.config(blynk_token);
 }
 
