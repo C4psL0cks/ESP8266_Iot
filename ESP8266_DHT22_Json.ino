@@ -23,7 +23,6 @@ void setup() {
   Serial.println("-------------------------------------");
   // Connect to Wifi.
   Serial.println();
-  Serial.println();
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
