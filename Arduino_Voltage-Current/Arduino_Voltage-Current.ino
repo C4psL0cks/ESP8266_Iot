@@ -9,9 +9,7 @@
   GND                 GND
 */
 
-
 #include <Wire.h>
-
 #define VT_PIN A0 // connect VT
 #define AT_PIN A1// connect AT
 
