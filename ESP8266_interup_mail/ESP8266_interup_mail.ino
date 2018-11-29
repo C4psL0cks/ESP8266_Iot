@@ -1,10 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <TridentTD_LineNotify.h>
-// Config connect WiFi
 #define WIFI_SSID "6021607"
 #define WIFI_PASSWORD "17401449"
-
-// Line config
 #define LINE_TOKEN "xxxx"
 #define IR_SW D7
 
