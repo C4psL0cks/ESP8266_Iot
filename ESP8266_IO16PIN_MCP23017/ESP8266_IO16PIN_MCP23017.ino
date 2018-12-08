@@ -25,7 +25,7 @@ int pin_21 = 0;
 
 void setup() {
   Serial.begin(115200);
-  mcp.begin(); 
+  mcp.begin();
   mcp.pinMode(pin_1, OUTPUT);
   mcp.pinMode(pin_2, OUTPUT);
   mcp.pinMode(pin_3, OUTPUT);
@@ -45,10 +45,12 @@ void setup() {
 }
 
 void loop() {
-  mcp.digitalWrite(pin_1, HIGH);
-  mcp.digitalWrite(pin_2, LOW);
-  delay(2000);
-  mcp.digitalWrite(pin_1, LOW);
-  mcp.digitalWrite(pin_2, HIGH);
-  delay(2000);
+  int val =  mcp.digitalRead(pin_6);
+  Serial.println(val);
+  //mcp.digitalWrite(pin_1, HIGH);
+  //mcp.digitalWrite(pin_2, LOW);
+  //delay(2000);
+  //mcp.digitalWrite(pin_1, LOW);
+  // mcp.digitalWrite(pin_2, HIGH);
+  // delay(2000);
 }
