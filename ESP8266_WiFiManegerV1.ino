@@ -59,8 +59,6 @@ void setup() {
     Serial.println("failed to mount FS");
   }
 
-
-
   wifiManager.resetSettings();
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
@@ -68,7 +66,6 @@ void setup() {
   wifiManager.addParameter(&custom_blynk_token);
   WiFiManagerParameter custom_line_token("LINE", "line token", line_token, 45);
   wifiManager.addParameter(&custom_line_token);
-
 
   //wifiManager.setTimeout(120);
 
