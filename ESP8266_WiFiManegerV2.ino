@@ -1,24 +1,24 @@
-//Blynk
-#define BLYNK_PRINT Serial
+#include <FS.h>                   //this needs to be first, or it all crashes and burns...
+
+#include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <BlynkSimpleEsp8266.h>
-
-#include <FS.h>
-#include <ESP8266WiFi.h>
-
 //needed for library
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h>
-#include <ArduinoJson.h>
+#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <SimpleTimer.h>
+#include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
 
-//WiFiManager
-WiFiManager wifiManager;
 
-//char Port[40] = "8442";
-//char server[40] = "blynk-cloud.com";
-char blynk_token[35] = "";
-char ssid[20] = ""; // ชื่อ
-char pass[20] = ""; //
+#define BLYNK_PRINT Serial    // Comment this out to disable prints and save space
+//#define BLYNK_DEBUG
+
+
+//define your default values here, if there are different values in config.json, they are overwritten.
+//char mqtt_server[40];
+//char mqtt_port[6] = "8080";
+char blynk_token[34] = "YOUR_BLYNK_TOKEN";
+
 //flag for saving data
 bool shouldSaveConfig = false;
 
@@ -27,13 +27,15 @@ void saveConfigCallback () {
   Serial.println("Should save config");
   shouldSaveConfig = true;
 }
+
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println();
 
   //clean FS, for testing
-  SPIFFS.format();
+  //SPIFFS.format();
 
   //read configuration from FS json
   Serial.println("mounting FS...");
@@ -57,8 +59,8 @@ void setup() {
         if (json.success()) {
           Serial.println("\nparsed json");
 
-          //strcpy(Port, json["Port"]);
-          //strcpy(server, json["server"]);
+          //strcpy(mqtt_server, json["mqtt_server"]);
+          //strcpy(mqtt_port, json["mqtt_port"]);
           strcpy(blynk_token, json["blynk_token"]);
 
         } else {
@@ -71,26 +73,47 @@ void setup() {
   }
   //end read
 
-  //WiFiManagerParameter custom_name1("Port", "Port", Port, 40);
-  //WiFiManagerParameter custom_name2("server", "server", server, 40);
-  WiFiManagerParameter custom_blynk_token("blynk", "blynk token", blynk_token, 35);
+
+
+  // The extra parameters to be configured (can be either global or just in the setup)
+  // After connecting, parameter.getValue() will get you the configured value
+  // id/name placeholder/prompt default length
+  //WiFiManagerParameter custom_mqtt_server("server", "mqtt server", mqtt_server, 40);
+  //WiFiManagerParameter custom_mqtt_port("port", "mqtt port", mqtt_port, 6);
+  WiFiManagerParameter custom_blynk_token("blynk", "blynk token", blynk_token, 33);
+
+  //WiFiManager
+  //Local intialization. Once its business is done, there is no need to keep it around
+  WiFiManager wifiManager;
 
   //set config save notify callback
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
+  //set static ip
+  //wifiManager.setSTAStaticIPConfig(IPAddress(10,0,1,99), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
+
   //add all your parameters here
-  //wifiManager.addParameter(&custom_name1);
-  //wifiManager.addParameter(&custom_name2);
+  //wifiManager.addParameter(&custom_mqtt_server);
+  //wifiManager.addParameter(&custom_mqtt_port);
   wifiManager.addParameter(&custom_blynk_token);
 
   //reset settings - for testing
-  wifiManager.resetSettings();
+  //wifiManager.resetSettings();
 
+  //set minimu quality of signal so it ignores AP's under that quality
+  //defaults to 8%
+  //wifiManager.setMinimumSignalQuality();
+
+  //sets timeout until configuration portal gets turned off
+  //useful to make it all retry or go to sleep
   //in seconds
   //wifiManager.setTimeout(120);
 
-  //seting namessid,password
-  if (!wifiManager.autoConnect("Ligh Box")) { 
+  //fetches ssid and pass and tries to connect
+  //if it does not connect it starts an access point with the specified name
+  //here  "AutoConnectAP"
+  //and goes into a blocking loop awaiting configuration
+  if (!wifiManager.autoConnect("Wifi_Manager", "password")) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
@@ -99,11 +122,11 @@ void setup() {
   }
 
   //if you get here you have connected to the WiFi
-  Serial.println("connected...success :)");
+  Serial.println("connected...yeey :)");
 
   //read updated parameters
-  //strcpy(Port, custom_name1.getValue());
-  //strcpy(server, custom_name2.getValue());
+  //strcpy(mqtt_server, custom_mqtt_server.getValue());
+  //strcpy(mqtt_port, custom_mqtt_port.getValue());
   strcpy(blynk_token, custom_blynk_token.getValue());
 
   //save the custom parameters to FS
@@ -111,8 +134,8 @@ void setup() {
     Serial.println("saving config");
     DynamicJsonBuffer jsonBuffer;
     JsonObject& json = jsonBuffer.createObject();
-    //json["Port"] = Port;
-    //json["server"] = server;
+    //json["mqtt_server"] = mqtt_server;
+    //json["mqtt_port"] = mqtt_port;
     json["blynk_token"] = blynk_token;
 
     File configFile = SPIFFS.open("/config.json", "w");
@@ -126,18 +149,29 @@ void setup() {
     //end save
   }
 
-  Serial.println("local ip");
-  Serial.println(WiFi.localIP());
+  //Serial.println("local ip");
+  //Serial.println(WiFi.localIP());
 
-  //Blynk.begin(blynk_token, ssid, pass); //
   Blynk.config(blynk_token);
+  bool result = Blynk.connect();
+
+  if (result != true)
+  {
+    Serial.println("BLYNK Connection Fail");
+    Serial.println(blynk_token);
+    wifiManager.resetSettings();
+    ESP.reset();
+    delay (5000);
+  }
+  else
+  {
+    Serial.println("BLYNK Connected");
+  }
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  //Serial.println(blynk_token);
-  //delay(2000);
-  Blynk.run(); //
+
+  Blynk.run();
 
 }
-
