@@ -1,20 +1,15 @@
-#include <FS.h>                   //this needs to be first, or it all crashes and burns...
-
-#include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
+#include <FS.h>                   
+#include <ESP8266WiFi.h>         
 #include <BlynkSimpleEsp8266.h>
-//needed for library
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <WiFiManager.h>          
 #include <SimpleTimer.h>
-#include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
+#include <ArduinoJson.h>          
 
 
-#define BLYNK_PRINT Serial    // Comment this out to disable prints and save space
-//#define BLYNK_DEBUG
+#define BLYNK_PRINT Serial   
 
-
-//define your default values here, if there are different values in config.json, they are overwritten.
 //char mqtt_server[40];
 //char mqtt_port[6] = "8080";
 char blynk_token[34] = "YOUR_BLYNK_TOKEN";
@@ -72,12 +67,6 @@ void setup() {
     Serial.println("failed to mount FS");
   }
   //end read
-
-
-
-  // The extra parameters to be configured (can be either global or just in the setup)
-  // After connecting, parameter.getValue() will get you the configured value
-  // id/name placeholder/prompt default length
   //WiFiManagerParameter custom_mqtt_server("server", "mqtt server", mqtt_server, 40);
   //WiFiManagerParameter custom_mqtt_port("port", "mqtt port", mqtt_port, 6);
   WiFiManagerParameter custom_blynk_token("blynk", "blynk token", blynk_token, 33);
@@ -89,9 +78,6 @@ void setup() {
   //set config save notify callback
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
-  //set static ip
-  //wifiManager.setSTAStaticIPConfig(IPAddress(10,0,1,99), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
-
   //add all your parameters here
   //wifiManager.addParameter(&custom_mqtt_server);
   //wifiManager.addParameter(&custom_mqtt_port);
@@ -99,20 +85,9 @@ void setup() {
 
   //reset settings - for testing
   //wifiManager.resetSettings();
-
-  //set minimu quality of signal so it ignores AP's under that quality
-  //defaults to 8%
   //wifiManager.setMinimumSignalQuality();
-
-  //sets timeout until configuration portal gets turned off
-  //useful to make it all retry or go to sleep
-  //in seconds
   //wifiManager.setTimeout(120);
 
-  //fetches ssid and pass and tries to connect
-  //if it does not connect it starts an access point with the specified name
-  //here  "AutoConnectAP"
-  //and goes into a blocking loop awaiting configuration
   if (!wifiManager.autoConnect("Wifi_Manager", "password")) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
@@ -142,36 +117,28 @@ void setup() {
     if (!configFile) {
       Serial.println("failed to open config file for writing");
     }
-
     json.printTo(Serial);
     json.printTo(configFile);
     configFile.close();
-    //end save
   }
 
-  //Serial.println("local ip");
-  //Serial.println(WiFi.localIP());
+  Serial.println("local ip");
+  Serial.println(WiFi.localIP());
 
   Blynk.config(blynk_token);
   bool result = Blynk.connect();
 
-  if (result != true)
-  {
+  if (result != true){
     Serial.println("BLYNK Connection Fail");
     Serial.println(blynk_token);
     wifiManager.resetSettings();
     ESP.reset();
     delay (5000);
-  }
-  else
-  {
+  }else{
     Serial.println("BLYNK Connected");
   }
-
 }
-
 void loop() {
-
   Blynk.run();
 
 }
