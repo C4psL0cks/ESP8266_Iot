@@ -103,7 +103,7 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  Blynk.begin(blynk_token,"blynk-cloud.com", 8442);
+  Blynk.config(blynk_token);
 
 }
 
