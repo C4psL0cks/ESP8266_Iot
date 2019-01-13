@@ -1,7 +1,5 @@
 //https://script.google.com/macros/s/AKfycbxKZ9NW681mC5GoxLFbB-bGA4eqXKDh7Um0YgVNcH5k2P9DNJAF/exec
 //http://api.pushingbox.com/pushingbox?devid=v9BAE38FD0936517&humidityData=22&celData=33&fehrData=111&hicData=22&hifData=775
-//https://script.google.com/macros/s/AKfycbxKZ9NW681mC5GoxLFbB-bGA4eqXKDh7Um0YgVNcH5k2P9DNJAF/exec
-//http://api.pushingbox.com/pushingbox?devid=v9BAE38FD0936517&humidityData=22&celData=33&fehrData=111&hicData=22&hifData=775
 
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
