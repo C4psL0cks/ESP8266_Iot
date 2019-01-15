@@ -35,10 +35,9 @@ Rf.
 
 Version
 =========
-- Mark  ตัวสตาดอัพ
-- Mark i ตัวสตาดอัพอับเกรด
-- Mark ii ตัวโปรเจคจบ
-- Mark iii ตัวโปรเจคไปออมสิน version 1 (สมบูรณ์)
-- Mark v ตัวโปรเจคออมสิน version 2 (Demo)
+- Mark  ระบบต้นแบบ
+- Mark I ตัวสตาดอัพอับ v2
+- Mark II ตัวโปรเจคจบ v1
+- Mark III ตัวโปรเจคจบ v1_2
 
 
