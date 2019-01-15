@@ -34,42 +34,32 @@ void setup() {
 }
 
 void loop() {
- 
-  
-    float h = 4;
-    float t = 5;
-    float f = 5;
-    float hif = 6;
-    float hic = 6;
-    report(h, t, f, hic, hif);
-    delay(1000);
+
+
+
+  int value1 = 6;
+  int value2 = 7;
+  int value3 = 8;
+  int value4 = 9;
+  int value5 = 0;
+  report(value1, value2, value3, value4, value5);
+  delay(1000);
 }
-void report(double humidity, double tempC, double tempF, double heatIndexC, double heatIndexF) {
+void report(int value1, int value2, int value3, int value4, int value5) {
 
-  
-  Serial.print("connecting to ");
-  Serial.println(host);
+  //http://api.pushingbox.com/pushingbox?devid=vB388D4B1A917188&value1=55&value2=55&value3=55&value4=55&value5=55
+  String Host = "api.pushingbox.com";
+  String Deviceid = "vB388D4B1A917188";
 
-  const int httpPort = 80;
 
-  if (!client.connect(host, httpPort)) {
+  Serial.print("connecting to " + String(Host));
+  if (!client.connect(Host, 80)) {
     Serial.println("connection failed");
     return;
   }
-  String url = "/pushingbox?devid=" + devid
-               + "&humidityData=" + humidity
-               + "&celData=" + tempC
-               + "&fehrData=" + tempF
-               + "&hicData=" + heatIndexC
-               + "&hifData=" + heatIndexF;
-
-  Serial.print("Requesting URL: ");
-  Serial.println(url);
-  client.print(String("GET ") + url
-               + " HTTP/1.1\r\n"
-               + "Host: " + host + "\r\n"
-               + "Connection: close\r\n\r\n"
-              );
+  String url = "/pushingbox?devid=" + Deviceid + "&value1=" + value1 + "&value2=" + value2 + "&value3=" + value3 + "&value4=" + value4 + "&value5=" + value5;
+  Serial.print("Requesting URL: " + url);
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" + "Host: " + Host + "\r\n" + "Connection: close\r\n\r\n");
   unsigned long timeout = millis();
   while (client.available() == 0) {
     if (millis() - timeout > 5000) {
@@ -78,10 +68,8 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
       return;
     }
   }
-  // Read all the lines of the reply from server and print them to Serial
   while (client.available()) {
     String line = client.readStringUntil('\r');
     Serial.print(line);
   }
 }
-
