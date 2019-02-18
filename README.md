@@ -1,8 +1,7 @@
 การใช้งานเริ่มต้น ESP8266 NodeMCU และการใช้งาน Application ต่างๆ
 ============
   
-- แหล่งรวบรวม iot และเผยแพร่ สำหรับผู้สนใจนำไปต่อยอด 
-โดยสามารถใช้ได้กับ ESP8266 และ ESP32    
+- แหล่งรวบรวม iot และเผยแพร่ สำหรับผู้สนใจนำไปต่อยอด โดยสามารถใช้ได้กับ ESP8266 และ ESP32    
 - การใช้งาน LINE API 
 - การใช่งาน SQL 
 - การใช้งาน Firebase 
@@ -27,12 +26,19 @@
 
 วิธีเพิ่มขา Digital
 ---------------------------------------------
+ขยายพอร์ตดิจิตอล I/O ด้วย MCP23017
+ขยาย Analog กับ ขยาย Digital.
+- Analog ใช้ 4051
+- Digital ใช้ 74HC595
+IC Boost Regulator -->1.8-5.5 โวล สูงสุด 1A 
+
 
 Rf.
 - https://arduino-esp8266.readthedocs.io/en/latest/index.html
 - https://github.com/esp8266
 - https://firebase-arduino.readthedocs.io/en/latest/
-
+- https://www.praphas.com/forum/index.php?PHPSESSID=7b9fa1rmfb5eit80kmtkkto662&topic=327.0
+- https://www.praphas.com/forum/index.php?board=27.0
 Version
 =========
 - Mark  ระบบต้นแบบ
