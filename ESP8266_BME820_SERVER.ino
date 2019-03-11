@@ -82,10 +82,8 @@ void report(double temperature, double pressure, double approx, double humidity)
   http.addHeader("Accept", "application/json");
   int httpCode = http.POST(JSONmessageBuffer);
   String payload = http.getString();
-  Serial.print("HTTPS CODE :");
-  Serial.println(httpCode);
-  Serial.print("Payload :");
-  Serial.println(payload);
+  Serial.print("HTTPS CODE :"+String(httpCode));
+  Serial.print("Payload :"+String(payload));
   http.end();
   delay(5000);
 }
