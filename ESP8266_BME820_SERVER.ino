@@ -60,7 +60,7 @@ void loop() {
   Serial.println(" %");
   Serial.println();
   report(Temperature, Pressure, Approx, Humidity);
-  delay(1000);
+  delay(10000);
 }
 void report(double temperature, double pressure, double approx, double humidity) {
 
@@ -77,13 +77,14 @@ void report(double temperature, double pressure, double approx, double humidity)
   //Serial.println(JSONmessageBuffer);
   Serial.println("Authenticating Device...");
   HTTPClient http;
-  http.begin("http://iphost/inputjson.php");
+  http.begin("http://65ff2c4a.ngrok.io/code/dbtestbme/inputjson.php");
+  http.header("User-Agent: ESP8266HTTPClient");
+  http.header("Connection: close");
   http.addHeader("Content-Type", "application/json");
   http.addHeader("Accept", "application/json");
   int httpCode = http.POST(JSONmessageBuffer);
   String payload = http.getString();
-  Serial.print("HTTPS CODE :"+String(httpCode));
-  Serial.print("Payload :"+String(payload));
+  Serial.println("HTTPS CODE :" + String(httpCode));
+  Serial.println("Payload :" + String(payload));
   http.end();
-  delay(5000);
 }
