@@ -1,5 +1,8 @@
+#include <MCP4922.h>
+#include <SPI.h>
+MCP4922 DAC(11, 13, 10, 5); // (MOSI,SCK,CS,LDAC) define Connections for UNO_board,
 #include <SoftwareSerial.h>
-SoftwareSerial bluetooth(2, 3);   //RX, TX
+SoftwareSerial bluetooth(2, 3);   //TX, RX
 
 #define START_CMD_CHAR '*'
 #define DIV_CMD_CHAR '|'
@@ -31,6 +34,11 @@ int pin_value_state = 0;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(Pin_chanal2, OUTPUT);
+  digitalWrite(Pin_chanal2, HIGH);
+  pinMode(Pin_chanal3, OUTPUT);
+  digitalWrite(Pin_chanal3, HIGH);
+  SPI.begin();
   while (!Serial) ;
   bluetooth.begin(9600);
   Serial.println("Speed-airflow-bluetooth");
@@ -40,6 +48,7 @@ void loop() {
 
   if (Serial.available()) {  // Read serial
     bluetooth.write(Serial.read());   // bluetooth = Serial.read() data form blue send to
+    //Serial.println("ddd");
   }
 
   if (bluetooth.available()) {  // get blue to show in serialmonitor
@@ -54,7 +63,7 @@ void loop() {
   else {
     // parse incoming command type 10|
     Read_command = bluetooth.parseInt(); // read the command
-    Serial.println("Read_command:" + String(Read_command));
+    //Serial.println("Read_command:" + String(Read_command));
 
     // 1) GET digitalWrite DATA FROM ARDUDROID *10|
     if (Read_command == CMD_DIGITALWRITE) {
@@ -80,7 +89,7 @@ void loop() {
         pin_value_state = HIGH;
       }
       // send pin_number and pin_value to function
-      //speed_run(pin_number_digital, pin_value_state);
+      speed_run(pin_number_digital, pin_value_state);
       return;
     }
 
@@ -94,11 +103,11 @@ void loop() {
 
       // parse incoming pin# and value |2|
       pin_number_analog = bluetooth.parseInt(); // read the pin
-      Serial.println("Pin_number_analog:" + String(pin_number_analog));
+      //Serial.println("Pin_number_analog:" + String(pin_number_analog));
 
       // parse incoming pin# and value |93|#
       pin_value = bluetooth.parseInt();  // read the value
-      Serial.println("Pin_value:" + String(pin_value));
+      //Serial.println("Pin_value:" + String(pin_value));
 
       //analogWrite( pin_num, pin_value );
       return;  // Done. return to loop();
@@ -141,35 +150,58 @@ void loop() {
 
 // 2) select the requested pin# for DigitalWrite action
 void speed_run(int pin_number, int pin_value) {
-  switch (pin_number) {
 
-    default:
-    //if nothing else matches, do the default
-    //default is optional
+  switch (pin_number) {
     case 0:
-      pinMode(Pin_chanal0, OUTPUT);
-      digitalWrite(Pin_chanal0, pin_value);
-      // add your code here
+      DAC.Set(0, 0); //0.0 v
+      Serial.println("pin_number:" + String(pin_number));
+      Serial.println("pin_value:" + String(pin_value));
       break;
     case 1:
-      pinMode(Pin_chanal1, OUTPUT);
-      digitalWrite(Pin_chanal1, pin_value);
-      // add your code here
+      if (pin_value == 1) {
+        DAC.Set(820, 820); //1.0 v
+      }
+      else {
+        DAC.Set(0, 0); //1.0 v
+      }
       break;
     case 2:
-      pinMode(Pin_chanal2, OUTPUT);
-      digitalWrite(Pin_chanal2, pin_value);
-      // add your code here
+      if (pin_value == 1) {
+        DAC.Set(1630, 1630); //2.0 v
+      }
+      else {
+        DAC.Set(0, 0); //1.0 v
+      }
       break;
     case 3:
-      pinMode(Pin_chanal3, OUTPUT);
-      digitalWrite(Pin_chanal3, pin_value);
-      // add your code here
+      if (pin_value == 1) {
+        DAC.Set(2440, 2440); //3.0 v
+      }
+      else {
+        DAC.Set(0, 0); //1.0 v
+      }
       break;
     case 4:
-      pinMode(Pin_chanal4, OUTPUT);
-      digitalWrite(Pin_chanal4, pin_value);
-      // add your code here
+      if (pin_value == 1) {
+        DAC.Set(3270, 3270); //4.0 v
+      }
+      else {
+        DAC.Set(0, 0); //1.0 v
+      }
+      break;
+    case 5:
+      if (pin_value == 1) {
+        DAC.Set(4095, 4095); //5.0 v
+      }
+      else {
+        DAC.Set(0, 0); //1.0 v
+      }
+      break;
+    case 6:
+      digitalWrite(Pin_chanal2, pin_value);
+      break;
+    case 7:
+      digitalWrite(Pin_chanal3, pin_value);
       break;
   }
 }
