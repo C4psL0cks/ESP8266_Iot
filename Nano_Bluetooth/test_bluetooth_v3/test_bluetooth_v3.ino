@@ -17,11 +17,9 @@ SoftwareSerial bluetooth(2, 3);   //TX, RX
 #define MAX_ANALOGWRITE 255
 #define PIN_HIGH 3
 #define PIN_LOW 2
-#define Pin_chanal0 5
 #define Pin_chanal1 6
 #define Pin_chanal2 7
-#define Pin_chanal3 8
-#define Pin_chanal4 9
+
 
 String Text;
 char get_Star = ' ';
@@ -34,10 +32,10 @@ int pin_value_state = 0;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(Pin_chanal1, OUTPUT);
+  digitalWrite(Pin_chanal1, HIGH);
   pinMode(Pin_chanal2, OUTPUT);
   digitalWrite(Pin_chanal2, HIGH);
-  pinMode(Pin_chanal3, OUTPUT);
-  digitalWrite(Pin_chanal3, HIGH);
   SPI.begin();
   while (!Serial) ;
   bluetooth.begin(9600);
@@ -198,10 +196,10 @@ void speed_run(int pin_number, int pin_value) {
       }
       break;
     case 6:
-      digitalWrite(Pin_chanal2, pin_value);
+      digitalWrite(Pin_chanal1, pin_value);
       break;
     case 7:
-      digitalWrite(Pin_chanal3, pin_value);
+      digitalWrite(Pin_chanal2, pin_value);
       break;
   }
 }

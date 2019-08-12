@@ -3,8 +3,7 @@
 
 MCP4922 DAC(11, 13, 10, 5); // (MOSI,SCK,CS,LDAC) define Connections for UNO_board,
 
-int incomingByte = 0; // for incoming serial data
-int number = 0;
+
 void setup()
 {
   Serial.begin(9600);
@@ -21,9 +20,9 @@ void loop()
   //delay(500);
   //DAC.Set(2440, 2440); //3.0 v
   //delay(500);
-  DAC.Set(3270, 3370); //4.0 v
+  //DAC.Set(3370, 3370); //4.0 v
   //delay(500);
-  //DAC.Set(4095,4095); //5.0 v
+  DAC.Set(4095,4095); //5.0 v
   //delay(500);
 
 }

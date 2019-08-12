@@ -13,23 +13,23 @@
 //}
 //--- run AT
 
-#include <SoftwareSerial.h>
-SoftwareSerial mySerial(2, 3); // TX, RX
-void setup()
-{
-  Serial.begin(38400);
-  while (!Serial);
-  mySerial.begin(38400);
-  Serial.println("test");
-}
-void loop()
-{
-  //Serial.println("test");
-  if (mySerial.available())
-    Serial.write(mySerial.read());
-  if (Serial.available())
-    mySerial.write(Serial.read());
-}
+//#include <SoftwareSerial.h>
+//SoftwareSerial mySerial(2, 3); // TX, RX
+//void setup()
+//{
+//  Serial.begin(38400);
+//  while (!Serial);
+//  mySerial.begin(38400);
+//  Serial.println("test");
+//}
+//void loop()
+//{
+//  //Serial.println("test");
+//  if (mySerial.available())
+//    Serial.write(mySerial.read());
+//  if (Serial.available())
+//    mySerial.write(Serial.read());
+//}
 
 //
 //#include <SoftwareSerial.h>
@@ -81,22 +81,22 @@ void loop()
 
 
 //
-//#include <SoftwareSerial.h>
-//SoftwareSerial soft(2, 3);   //RX, TX
-//
-//void setup() {
-//  Serial.begin(9600);  // Debug Serial
-//  soft.begin(9600);   // Bluetooth Serial
-//}
-//
-//void loop() {
-//  if (Serial.available()) {
-//    soft.write(Serial.read());
-//  }
-//  if (soft.available()) {
-//    Serial.write(soft.read());
-//    if(soft.read()){
-//      Serial.println("ANS");
-//    }
-//  }
-//}
+#include <SoftwareSerial.h>
+SoftwareSerial soft(2, 3);   //TX, RX
+
+void setup() {
+  Serial.begin(9600);  // Debug Serial
+  soft.begin(9600);   // Bluetooth Serial
+}
+
+void loop() {
+  if (Serial.available()) {
+    soft.write(Serial.read());
+  }
+  if (soft.available()) {
+    Serial.write(soft.read());
+    if(soft.read()){
+      Serial.println("ANS");
+    }
+  }
+}
