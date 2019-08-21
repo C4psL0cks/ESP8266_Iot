@@ -14,7 +14,7 @@ void loop()
 {
   //DAC.Set(0, 0); //1.0 v
   //delay(500);
-  //DAC.Set(820, 820); //1.0 v
+  DAC.Set(820, 820); //1.0 v
   //delay(500);
   //DAC.Set(1630, 1630); //2.0 v
   //delay(500);
@@ -22,7 +22,7 @@ void loop()
   //delay(500);
   //DAC.Set(3370, 3370); //4.0 v
   //delay(500);
-  DAC.Set(4095,4095); //5.0 v
+  //DAC.Set(4095,4095); //5.0 v
   //delay(500);
 
 }
