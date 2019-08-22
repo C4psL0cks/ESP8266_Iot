@@ -1,17 +1,4 @@
-///---- read serial ----
-//char BYTE;
-//
-//void setup() {
-//  Serial.begin(9600);
-//}
-//
-//void loop() {
-//  while (!Serial.available());   // stay here so long as COM port is empty
-//  BYTE = Serial.read();        // read next available byte
-//  Serial.print(BYTE);
-//  delay(50);
-//}
-//--- run AT
+// Serial.println("Start...Setup Buletooth");
 
 //#include <SoftwareSerial.h>
 //SoftwareSerial mySerial(2, 3); // TX, RX
@@ -20,7 +7,7 @@
 //  Serial.begin(38400);
 //  while (!Serial);
 //  mySerial.begin(38400);
-//  Serial.println("test");
+//  Serial.println("Start...Setup Buletooth");
 //}
 //void loop()
 //{
@@ -31,6 +18,32 @@
 //    mySerial.write(Serial.read());
 //}
 
+
+// Serial.println("Start...Setup Buletooth");
+#include <SoftwareSerial.h>
+SoftwareSerial soft(2, 3);   //TX, RX
+
+void setup() {
+  Serial.begin(9600);  // Debug Serial
+  soft.begin(9600);   // Bluetooth Serial
+  Serial.println("Start...Read Buletooth");
+}
+
+void loop() {
+  //Serial.println("Helo");
+  if (Serial.available()) {
+    soft.write(Serial.read());
+  }
+  if (soft.available()) {
+    Serial.write(soft.read());
+    if (soft.read()) {
+      Serial.println("ANS");
+    }
+  }
+}
+
+
+// Check buff
 //
 //#include <SoftwareSerial.h>
 //int bluetoothTx = 2;  // TX-O pin of bluetooth mate
@@ -68,7 +81,7 @@
 //    }
 //  }
 //}
-
+//
 //// init for Sparkfun radio (works for BLEmini too)
 //void setupBluetooth() {
 //  bluetooth.begin(115200);  // The Bluetooth Mate defaults to 115200bps
@@ -78,25 +91,3 @@
 //  // 115200 can be too fast at times for NewSoftSerial to relay the data reliably
 //  bluetooth.begin(9600);  // Start bluetooth serial at 9600
 //}
-
-
-//
-#include <SoftwareSerial.h>
-SoftwareSerial soft(2, 3);   //TX, RX
-
-void setup() {
-  Serial.begin(9600);  // Debug Serial
-  soft.begin(9600);   // Bluetooth Serial
-}
-
-void loop() {
-  if (Serial.available()) {
-    soft.write(Serial.read());
-  }
-  if (soft.available()) {
-    Serial.write(soft.read());
-    if(soft.read()){
-      Serial.println("ANS");
-    }
-  }
-}

@@ -15,8 +15,8 @@ SoftwareSerial bluetooth(2, 3);   //TX, RX
 #define MIN_COMMAND 10  // minimum command number code. used for error checking. 
 #define IN_STRING_LENGHT 40
 #define MAX_ANALOGWRITE 255
-#define PIN_HIGH 3
-#define PIN_LOW 2
+#define PIN_HIGH 3 // 1
+#define PIN_LOW 2  // 0
 #define Pin_chanal1 6
 #define Pin_chanal2 7
 
