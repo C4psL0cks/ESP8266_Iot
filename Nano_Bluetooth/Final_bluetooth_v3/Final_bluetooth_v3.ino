@@ -15,11 +15,10 @@ SoftwareSerial bluetooth(2, 3);   //TX, RX
 #define MIN_COMMAND 10  // minimum command number code. used for error checking. 
 #define IN_STRING_LENGHT 40
 #define MAX_ANALOGWRITE 255
-#define PIN_HIGH 3 // 1
-#define PIN_LOW 2  // 0
+#define PIN_HIGH 1 // 1
+#define PIN_LOW 0  // 0
 #define Pin_chanal1 6
 #define Pin_chanal2 7
-
 
 String Text;
 char get_Star = ' ';
@@ -36,10 +35,16 @@ void setup() {
   digitalWrite(Pin_chanal1, HIGH);
   pinMode(Pin_chanal2, OUTPUT);
   digitalWrite(Pin_chanal2, HIGH);
+  delay(1000);
+  digitalWrite(Pin_chanal1, LOW);
+  digitalWrite(Pin_chanal2, LOW);
   SPI.begin();
   while (!Serial) ;
   bluetooth.begin(9600);
   Serial.println("Speed-airflow-bluetooth");
+  DAC.Set(0, 0); //1.0 v
+  DAC.Set(2600, 0); //3.0 v
+
 
 }
 void loop() {
@@ -157,7 +162,8 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 1:
       if (pin_value == 1) {
-        DAC.Set(820, 820); //1.0 v
+        //DAC.Set(820, 820); //1.0 v
+        DAC.Set(1070, 0); //1.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v
@@ -165,7 +171,8 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 2:
       if (pin_value == 1) {
-        DAC.Set(1630, 1630); //2.0 v
+        //DAC.Set(1630, 1630); //2.0 v
+        DAC.Set(1860, 0); //2.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v
@@ -173,7 +180,8 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 3:
       if (pin_value == 1) {
-        DAC.Set(2440, 2440); //3.0 v
+        //DAC.Set(2440, 2440); //3.0 v
+        DAC.Set(2600, 0); //3.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v
@@ -181,7 +189,8 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 4:
       if (pin_value == 1) {
-        DAC.Set(3270, 3270); //4.0 v
+        //DAC.Set(3270, 3270); //4.0 v
+        DAC.Set(3400, 0); //4.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v

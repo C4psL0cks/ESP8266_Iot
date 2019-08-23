@@ -14,35 +14,33 @@ void setup() {
   Serial.println("4. 4 V");
   Serial.println("5. 5 V");
   Serial.println("===================");
+  DAC.Set(0, 0); //1.0 v
+  DAC.Set(2600, 0); //3.0 v
 }
 void loop() {
+
   if (Serial.available() > 0) {
-    //test = Serial.read();
     number = Serial.parseInt();
     Serial.println("Select :" + String(number));
     if (number == 1) {
-      DAC.Set(820, 820); //1.0 v
+      DAC.Set(1070, 0); //1.0 v
       Serial.println("1. 1 V");
     }
     if (number == 2) {
-      DAC.Set(1630, 1630); //2.0 v
+      DAC.Set(1860, 0); //2.0 v
       Serial.println("2. 2 V");
     }
     if (number == 3) {
-      DAC.Set(2440, 2440); //3.0 v
+      DAC.Set(2600, 0); //3.0 v
       Serial.println("3. 3 V");
     }
     if (number == 4) {
-      DAC.Set(3370, 3370); //4.0 v
+      DAC.Set(3400, 0); //4.0 v
       Serial.println("4. 4 V");
     }
     if (number == 5) {
       DAC.Set(4095, 4095); //5.0 v
       Serial.println("5. 5 V");
     }
-    //    else {
-    //      DAC.Set(0, 0); //1.0 v
-    //      Serial.println("0. 0 V");
-    //    }
   }
 }
