@@ -41,7 +41,7 @@ void setup() {
   SPI.begin();
   while (!Serial) ;
   bluetooth.begin(9600);
-  Serial.println("Speed-airflow-bluetooth");
+  Serial.println("Connected...");
   DAC.Set(0, 0); //1.0 v
   DAC.Set(2600, 0); //3.0 v
 
@@ -162,8 +162,7 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 1:
       if (pin_value == 1) {
-        //DAC.Set(820, 820); //1.0 v
-        DAC.Set(1070, 0); //1.0 v
+        DAC.Set(810, 0); //1.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v
@@ -171,8 +170,7 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 2:
       if (pin_value == 1) {
-        //DAC.Set(1630, 1630); //2.0 v
-        DAC.Set(1860, 0); //2.0 v
+        DAC.Set(1610, 0); //2.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v
@@ -180,8 +178,7 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 3:
       if (pin_value == 1) {
-        //DAC.Set(2440, 2440); //3.0 v
-        DAC.Set(2600, 0); //3.0 v
+        DAC.Set(2410, 0); //3.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v
@@ -189,8 +186,7 @@ void speed_run(int pin_number, int pin_value) {
       break;
     case 4:
       if (pin_value == 1) {
-        //DAC.Set(3270, 3270); //4.0 v
-        DAC.Set(3400, 0); //4.0 v
+        DAC.Set(3280, 0); //4.0 v
       }
       else {
         DAC.Set(0, 0); //1.0 v

@@ -23,19 +23,19 @@ void loop() {
     number = Serial.parseInt();
     Serial.println("Select :" + String(number));
     if (number == 1) {
-      DAC.Set(1070, 0); //1.0 v
+      DAC.Set(810, 0); //1.0 v
       Serial.println("1. 1 V");
     }
     if (number == 2) {
-      DAC.Set(1860, 0); //2.0 v
+      DAC.Set(1610, 0); //2.0 v
       Serial.println("2. 2 V");
     }
     if (number == 3) {
-      DAC.Set(2600, 0); //3.0 v
+      DAC.Set(2410, 0); //3.0 v
       Serial.println("3. 3 V");
     }
     if (number == 4) {
-      DAC.Set(3400, 0); //4.0 v
+      DAC.Set(3280, 0); //4.0 v
       Serial.println("4. 4 V");
     }
     if (number == 5) {

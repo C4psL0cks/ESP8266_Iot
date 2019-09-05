@@ -23,6 +23,8 @@
 #include <SoftwareSerial.h>
 SoftwareSerial soft(2, 3);   //TX, RX
 
+char get_Star = ' ';
+
 void setup() {
   Serial.begin(9600);  // Debug Serial
   soft.begin(9600);   // Bluetooth Serial
@@ -36,10 +38,21 @@ void loop() {
   }
   if (soft.available()) {
     Serial.write(soft.read());
-    if (soft.read()) {
-      Serial.println("ANS");
-    }
+    //    if (soft.read()) {
+    //      Serial.println("ANS");
+    //    }
+     get_Star = soft.read();
+     Serial.println(get_Star);
+     
+     if(strcmp("*10|7|1#",get_Star)==0){
+      Serial.println("ok");
+     }
+     else{
+      Serial.println("no");
+     }
+  
   }
+
 }
 
 
