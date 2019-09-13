@@ -10,8 +10,8 @@
 #define MOSI_PIN D7
 #define MISO_PIN D6
 #define WIFI_SSID "6021607"
-#define WIFI_PASS  "17401449"
-#define LINE_TOKEN  "vMIl5g0XKEPgMZdQCPeff8DKiYLE7jgrRpfRptZikrx"
+#define WIFI_PASS "17401449"
+#define LINE_TOKEN "vMIl5g0XKEPgMZdQCPeff8DKiYLE7jgrRpfRptZikrx"
 #define relaypinIN1_Water D0
 #define relaypinIN2_Fan D1
 #define Sensor_Pin_Moisture 0
@@ -61,7 +61,8 @@ OneWire ds(Sensor_Pin_Temperature);
 MCP3008 adc(CLOCK_PIN, MOSI_PIN, MISO_PIN, CS_PIN);
 Servo myservo;
 
-void setup() {
+void setup()
+{
 
   Serial.begin(115200);
   myservo.attach(Sensor_Pin_Servo);
@@ -74,7 +75,8 @@ void setup() {
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
@@ -85,7 +87,8 @@ void setup() {
 
   configTime(7 * 3600, 0, ntp_server1, ntp_server2, ntp_server3);
   Serial.println("\nWaiting for time");
-  while (!time(nullptr)) {
+  while (!time(nullptr))
+  {
     Serial.print(".");
     delay(1000);
   }
@@ -93,10 +96,11 @@ void setup() {
   LINE.setToken(LINE_TOKEN);
 }
 
-void loop() {
+void loop()
+{
 
   time_t now = time(nullptr);
-  struct tm* p_tm = localtime(&now);
+  struct tm *p_tm = localtime(&now);
 
   Serial.println("************************************************");
   Serial.print("DATE : " + String(ctime(&now)));
@@ -105,7 +109,7 @@ void loop() {
   volts = (float)sensorValue / 1023.00;
   Serial.println("Volts in ESP8266 : " + String(volts));
 
-  Value_Moisture_percentage = ( 100.00 - ( (adc.readADC(Sensor_Pin_Moisture) / 1023.00) * 100.00 ) );
+  Value_Moisture_percentage = (100.00 - ((adc.readADC(Sensor_Pin_Moisture) / 1023.00) * 100.00));
   Serial.println("Value_Moisture_percentage : " + String(Value_Moisture_percentage));
 
   ValueLDR = adc.readADC(Sensor_Pin_LDR);
@@ -117,25 +121,27 @@ void loop() {
   Fuzzy_Average_Water = Water(Value_Temperature, ValueLDR, Value_Moisture_percentage); //Average water
   Serial.print("Fuzzy_Average_Water : " + String(Fuzzy_Average_Water));
 
-  Fuzzy_Average_Fan = Fan(Value_Temperature, Value_Moisture_percentage);               //Average Fan
+  Fuzzy_Average_Fan = Fan(Value_Temperature, Value_Moisture_percentage); //Average Fan
   Serial.print(" Fuzzy_Average_Fan : " + String(Fuzzy_Average_Fan));
 
-  Fuzzy_Average_Windows = Windows(ValueLDR, Value_Moisture_percentage);                //Average windonws
+  Fuzzy_Average_Windows = Windows(ValueLDR, Value_Moisture_percentage); //Average windonws
   Serial.print(" Fuzzy_Average_Windows : " + String(Fuzzy_Average_Windows));
 
   Serial.println();
 
   Serial.println("************************************************");
 
-
   /// Water
-  if (p_tm->tm_hour >= 0 && p_tm->tm_hour <= 8) { // 00.00 - 08.00
+  if (p_tm->tm_hour >= 0 && p_tm->tm_hour <= 8)
+  { // 00.00 - 08.00
     Serial.println("---------------------------");
     Serial.println("Water :00.00 - 08.00 ");
-    if (Fuzzy_Average_Water > 0.25 && Fuzzy_Average_Water < 0.35) {
+    if (Fuzzy_Average_Water > 0.25 && Fuzzy_Average_Water < 0.35)
+    {
       WaterOn();
       Serial.println("-->WATERON");
-      if (checkwater1) {
+      if (checkwater1)
+      {
         //LINE.notify("เปิดน้ำ");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Water, 5);
@@ -143,10 +149,12 @@ void loop() {
       }
       Serial.println("---------------------------");
     }
-    else {
+    else
+    {
       WaterOff();
       Serial.println("-->WATEROFF");
-      if (checkwater2) {
+      if (checkwater2)
+      {
         //LINE.notify("ปิดน้ำ");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Water, 5);
@@ -156,13 +164,16 @@ void loop() {
     }
   }
 
-  if (p_tm->tm_hour >= 18 && p_tm->tm_hour <= 23) { // 18.00 - 23.00
+  if (p_tm->tm_hour >= 18 && p_tm->tm_hour <= 23)
+  { // 18.00 - 23.00
     Serial.println("---------------------------");
     Serial.println("Water : 18.00 - 23.00 ");
-    if (Fuzzy_Average_Water >= 1.00) {
+    if (Fuzzy_Average_Water >= 1.00)
+    {
       WaterOn();
       Serial.println("-->WATERON");
-      if (checkwater3) {
+      if (checkwater3)
+      {
         //LINE.notify("เปิดน้ำ");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Water, 5);
@@ -170,10 +181,12 @@ void loop() {
       }
       Serial.println("---------------------------");
     }
-    else {
+    else
+    {
       WaterOff();
       Serial.println("-->WATEROFF");
-      if (checkwater4) {
+      if (checkwater4)
+      {
         //LINE.notify("ปิดน้ำ");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Water, 5);
@@ -184,13 +197,16 @@ void loop() {
   }
 
   /// Fan
-  if (p_tm->tm_hour >= 12 && p_tm->tm_hour <= 23) { // 12.00 - 23.00
+  if (p_tm->tm_hour >= 12 && p_tm->tm_hour <= 23)
+  { // 12.00 - 23.00
     Serial.println("---------------------------");
     Serial.println("Fan : 12.00 - 23.00 ");
-    if (Fuzzy_Average_Fan >= 0.50) {
+    if (Fuzzy_Average_Fan >= 0.50)
+    {
       FanOn();
       Serial.println("-->FANON");
-      if (checkfan1) {
+      if (checkfan1)
+      {
         //LINE.notify("เปิดพัดลม");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Fan, 5);
@@ -198,10 +214,12 @@ void loop() {
       }
       Serial.println("---------------------------");
     }
-    else {
+    else
+    {
       FanOff();
       Serial.println("-->FANOFF");
-      if (checkfan2) {
+      if (checkfan2)
+      {
         //LINE.notify("ปิดพัดลม");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Fan, 5);
@@ -212,13 +230,16 @@ void loop() {
   }
 
   /// Windows
-  if (p_tm->tm_hour >= 0 && p_tm->tm_hour < 14) { // 00.00 - 14.00
+  if (p_tm->tm_hour >= 0 && p_tm->tm_hour < 14)
+  { // 00.00 - 14.00
     Serial.println("---------------------------");
     Serial.println("Windows: 00.00 - 13.00 ");
-    if (Fuzzy_Average_Windows > 0.70 && Fuzzy_Average_Windows < 1.50) {
+    if (Fuzzy_Average_Windows > 0.70 && Fuzzy_Average_Windows < 1.50)
+    {
       WindowsOn();
       Serial.println("-->WINDOWOpen");
-      if (checkwindows1) {
+      if (checkwindows1)
+      {
         //LINE.notify("เปิดม่าน");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Windows, 5);
@@ -226,10 +247,12 @@ void loop() {
       }
       Serial.println("---------------------------");
     }
-    else {
+    else
+    {
       WindowsOff();
       Serial.println("-->WINDOWClose");
-      if (checkwindows2) {
+      if (checkwindows2)
+      {
         //LINE.notify("ปิดม่าน");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Windows, 5);
@@ -238,13 +261,16 @@ void loop() {
       Serial.println("---------------------------");
     }
   }
-  if (p_tm->tm_hour >= 14) { //หลังไปแล้วให้ปิด 14.00
+  if (p_tm->tm_hour >= 14)
+  { //หลังไปแล้วให้ปิด 14.00
     Serial.println("---------------------------");
     Serial.println("Windows: 14.00 ");
-    if (Fuzzy_Average_Windows > 0.70 && Fuzzy_Average_Windows < 1.50) {
+    if (Fuzzy_Average_Windows > 0.70 && Fuzzy_Average_Windows < 1.50)
+    {
       WindowsOff();
       Serial.println("-->WINDOWClose");
-      if (checkwindows3) {
+      if (checkwindows3)
+      {
         //LINE.notify("ปิดม่าน");
         //LINE.notify(p_tm->tm_hour);
         //LINE.notify(Fuzzy_Average_Windows, 5);
@@ -253,106 +279,129 @@ void loop() {
       Serial.println("---------------------------");
     }
   }
-
 }
-void WaterOn() {
+void WaterOn()
+{
   digitalWrite(relaypinIN1_Water, LOW);
 }
-void WaterOff() {
+void WaterOff()
+{
   digitalWrite(relaypinIN1_Water, HIGH);
 }
-void FanOn() {
+void FanOn()
+{
   digitalWrite(relaypinIN2_Fan, LOW);
 }
-void FanOff() {
+void FanOff()
+{
   digitalWrite(relaypinIN2_Fan, HIGH);
 }
-void WindowsOn() {
+void WindowsOn()
+{
   myservo.write(70);
 }
-void WindowsOff() {
+void WindowsOff()
+{
   myservo.write(0);
 }
 
-float One(int input, int zmin, int zmax) {
+float One(int input, int zmin, int zmax)
+{
   float result = (float(input - zmin) / float(zmax - zmin));
   return result;
 }
-float Zero(int input, int zmin, int zmax) {
+float Zero(int input, int zmin, int zmax)
+{
   float result = float(1 - (float(input - zmin) / float(zmax - zmin)));
   return result;
 }
-float average_water(float ResultTempFuzzy, float ResultLDRFuzzy, float ResultSoilFuzzy) {
+float average_water(float ResultTempFuzzy, float ResultLDRFuzzy, float ResultSoilFuzzy)
+{
   float avg_water = (ResultTempFuzzy + ResultLDRFuzzy + ResultSoilFuzzy) / 3;
   return avg_water;
 }
-float average_fan(float ResultTempFuzzy, float ResultSoilFuzzy) {
+float average_fan(float ResultTempFuzzy, float ResultSoilFuzzy)
+{
   float avg_fan = (ResultTempFuzzy + ResultSoilFuzzy) / 2;
   return avg_fan;
 }
-float average_windows(float ResultLDRFuzzy, float ResultSoilFuzzy) {
+float average_windows(float ResultLDRFuzzy, float ResultSoilFuzzy)
+{
   float avg_windows = (ResultLDRFuzzy + ResultSoilFuzzy) / 2;
   return avg_windows;
 }
 
-double Water(float Value_Temperature, int ValueLDR, float Value_Moisture_percentage) {
+double Water(float Value_Temperature, int ValueLDR, float Value_Moisture_percentage)
+{
 
   float resultTemp = 0;
   float resultLDR = 0;
   float resultSoil = 0;
   float Averagewater_ALL;
 
-  if (Value_Temperature > 27) {
-    resultTemp = One(Value_Temperature, 27, 40);  // ร้อนถึงร้อนมาก = 1 คือเปิด
+  if (Value_Temperature > 27)
+  {
+    resultTemp = One(Value_Temperature, 27, 40); // ร้อนถึงร้อนมาก = 1 คือเปิด
     //Serial.println("resultTemp :" + String(resultTemp));
     //0.31
-    if (resultTemp > 0.30) {
+    if (resultTemp > 0.30)
+    {
       resultTemp = 1;
     }
   }
-  else {
-    resultTemp = Zero(Value_Temperature, 0, 27);  // ร้อนน้อย = 0 คือไม่เปิด
+  else
+  {
+    resultTemp = Zero(Value_Temperature, 0, 27); // ร้อนน้อย = 0 คือไม่เปิด
     //Serial.println("resultTemp :" + String(resultTemp));
     //0.19
-    if (resultTemp < 0.20) {
+    if (resultTemp < 0.20)
+    {
       resultTemp = 0;
     }
   }
 
   //Serial.println("resultTemp :" + String(resultTemp));
 
-  if (ValueLDR >= 200 && ValueLDR <= 700) {
-    resultLDR = One(ValueLDR, 200, 700);       // สว่างเกิน ต้องเปิด = 1 คือเปิด
+  if (ValueLDR >= 200 && ValueLDR <= 700)
+  {
+    resultLDR = One(ValueLDR, 200, 700); // สว่างเกิน ต้องเปิด = 1 คือเปิด
     //Serial.println("resultLDR :" + String(resultLDR));
     //0.28-0.30
-    if (resultLDR > 0.28) {
+    if (resultLDR > 0.28)
+    {
       resultLDR = 1;
     }
   }
-  else {
-    resultLDR = Zero(ValueLDR, 800, 1024);    // มืดเกิน ไม่ต้องเปิด = 0 คือไม่เปิด
+  else
+  {
+    resultLDR = Zero(ValueLDR, 800, 1024); // มืดเกิน ไม่ต้องเปิด = 0 คือไม่เปิด
     //Serial.println("resultLDR :" + String(resultLDR));
     //0.50-0.60
-    if (resultLDR > 0.50) {
+    if (resultLDR > 0.50)
+    {
       resultLDR = 0;
     }
   }
 
   //Serial.println("resultLDR :" + String(resultLDR));
 
-  if (Value_Moisture_percentage < 90) {
+  if (Value_Moisture_percentage < 90)
+  {
     resultSoil = One(Value_Moisture_percentage, 0, 100); // น้ำน้อยความชิ้นน้อย ต้องเปิด = 1 คือเปิด
     // Serial.println("resultSoil :" + String(resultSoil));
     //0.00
-    if (resultSoil < 0.05) {
+    if (resultSoil < 0.05)
+    {
       resultSoil = 1;
     }
   }
-  else {
+  else
+  {
     resultSoil = Zero(Value_Moisture_percentage, 90, 100); // น้ำมากความชื้นมากไม่ต้องเปิด  = 0 คือไม่เปิด
     //Serial.println("resultSoil :" + String(resultSoil));
     //0.30
-    if (resultSoil > 0.25) {
+    if (resultSoil > 0.25)
+    {
       resultSoil = 0;
     }
   }
@@ -361,44 +410,52 @@ double Water(float Value_Temperature, int ValueLDR, float Value_Moisture_percent
   Averagewater_ALL = average_water(resultTemp, resultLDR, resultSoil);
   return Averagewater_ALL;
   //1.00
-
 }
-double Fan(float Value_Temperature, float Value_Moisture_percentage) {
+double Fan(float Value_Temperature, float Value_Moisture_percentage)
+{
 
   float resultTemp = 0;
   float resultSoil = 0;
   float Averagefan_ALL;
 
-  if (Value_Temperature >= 30) {
+  if (Value_Temperature >= 30)
+  {
     resultTemp = One(Value_Temperature, 30, 40); // ร้อนมาก = 1 คือเปิด
     //Serial.println("resultTemp :" + String(resultTemp));
     //0.31
-    if (resultTemp > 0.30) {
+    if (resultTemp > 0.30)
+    {
       resultTemp = 1;
     }
   }
-  else {
+  else
+  {
     resultTemp = Zero(Value_Temperature, 0, 30); // ไม่ร้อน = 0 คือปิด
     //Serial.println("resultTemp :" + String(resultTemp));
     //0.19
-    if (resultTemp < 0.20) {
+    if (resultTemp < 0.20)
+    {
       resultTemp = 0;
     }
   }
 
-  if (Value_Moisture_percentage > 90) {
+  if (Value_Moisture_percentage > 90)
+  {
     resultSoil = One(Value_Moisture_percentage, 90, 100); // น้ำมากความชิ้นมาก = 1 คือเปิด
     //Serial.println("resultSoil :" + String(resultSoil));
     //0.70
-    if (resultSoil > 0.60) {
+    if (resultSoil > 0.60)
+    {
       resultSoil = 1;
     }
   }
-  else {
+  else
+  {
     resultSoil = Zero(Value_Moisture_percentage, 0, 90); // น้ำน้อยความชิ้นน้อย = 0 คือปิด
     //Serial.println("resultSoil :" + String(resultSoil));
     //1.00
-    if (resultSoil < 1.20) {
+    if (resultSoil < 1.20)
+    {
       resultSoil = 0;
     }
   }
@@ -410,43 +467,53 @@ double Fan(float Value_Temperature, float Value_Moisture_percentage) {
   //0.55
 }
 
-double Windows(int ValueLDR, float Value_Moisture_percentage)  {
+double Windows(int ValueLDR, float Value_Moisture_percentage)
+{
 
   float resultLDR = 0;
   float resultSoil = 0;
   float Averagewindows_ALL;
 
-  if (ValueLDR > 800) {
+  if (ValueLDR > 800)
+  {
     resultLDR = One(ValueLDR, 800, 1024); // แสงน้อย มือ = 1 คือเปิด
     //Serial.println("resultLDR :" + String(resultLDR));
     //0.40
-    if (resultLDR < 1.50) {
+    if (resultLDR < 1.50)
+    {
       resultLDR = 1;
     }
-  } else {
+  }
+  else
+  {
     resultLDR = Zero(ValueLDR, 500, 800); // แสงมาก สว่าง = 0 คือปิด
     //Serial.println("resultLDR :" + String(resultLDR));
     //1.00
-    if (resultLDR > 1.60) {
+    if (resultLDR > 1.60)
+    {
       resultLDR = 0;
     }
   }
 
   //Serial.println("resultLDR :" + String(resultLDR));
 
-  if (Value_Moisture_percentage < 90) {
+  if (Value_Moisture_percentage < 90)
+  {
     resultSoil = One(Value_Moisture_percentage, 0, 100); // น้ำน้อยความชิ้นน้อย ต้องเปิด = 1 คือเปิด
     //Serial.println("resultSoil :" + String(resultSoil));
     //0.00
-    if (resultSoil < 0.05) {
+    if (resultSoil < 0.05)
+    {
       resultSoil = 1;
     }
   }
-  else {
+  else
+  {
     resultSoil = Zero(Value_Moisture_percentage, 90, 100); // น้ำมากความชื้นมากไม่ต้องเปิด  = 0 คือไม่เปิด
     //Serial.println("resultSoil :" + String(resultSoil));
     //0.30
-    if (resultSoil > 0.25) {
+    if (resultSoil > 0.25)
+    {
       resultSoil = 0;
     }
   }
@@ -454,10 +521,11 @@ double Windows(int ValueLDR, float Value_Moisture_percentage)  {
   Averagewindows_ALL = average_windows(resultLDR, resultSoil);
   return Averagewindows_ALL;
   //1.00
-
 }
-float temperature() {
-  if ( !ds.search(addr)) {
+float temperature()
+{
+  if (!ds.search(addr))
+  {
     ds.reset_search();
     delay(250);
   }
@@ -468,20 +536,28 @@ float temperature() {
   present = ds.reset();
   ds.select(addr);
   ds.write(0xBE);
-  for ( i = 0; i < 9; i++) {
+  for (i = 0; i < 9; i++)
+  {
     data[i] = ds.read();
   }
   int16_t raw = (data[1] << 8) | data[0];
-  if (type_s) {
+  if (type_s)
+  {
     raw = raw << 3;
-    if (data[7] == 0x10) {
+    if (data[7] == 0x10)
+    {
       raw = (raw & 0xFFF0) + 12 - data[6];
     }
-  } else {
+  }
+  else
+  {
     byte cfg = (data[4] & 0x60);
-    if (cfg == 0x00) raw = raw & ~7;
-    else if (cfg == 0x20) raw = raw & ~3;
-    else if (cfg == 0x40) raw = raw & ~1;
+    if (cfg == 0x00)
+      raw = raw & ~7;
+    else if (cfg == 0x20)
+      raw = raw & ~3;
+    else if (cfg == 0x40)
+      raw = raw & ~1;
   }
   celsius = (float)raw / 16.0;
   return celsius;

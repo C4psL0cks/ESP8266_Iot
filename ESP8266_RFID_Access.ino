@@ -8,24 +8,24 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
 int statuss = 0;
 int out = 0;
 void setup()
 {
-  Serial.begin(9600);   // Initiate a serial communication
-  SPI.begin();      // Initiate  SPI bus
-  mfrc522.PCD_Init();   // Initiate MFRC522
+  Serial.begin(9600); // Initiate a serial communication
+  SPI.begin();        // Initiate  SPI bus
+  mfrc522.PCD_Init(); // Initiate MFRC522
 }
 void loop()
 {
   // Look for new cards
-  if ( ! mfrc522.PICC_IsNewCardPresent())
+  if (!mfrc522.PICC_IsNewCardPresent())
   {
     return;
   }
   // Select one of the cards
-  if ( ! mfrc522.PICC_ReadCardSerial())
+  if (!mfrc522.PICC_ReadCardSerial())
   {
     return;
   }
@@ -53,7 +53,8 @@ void loop()
     statuss = 1;
   }
 
-  else   {
+  else
+  {
     Serial.println(" Access Denied ");
     delay(3000);
   }

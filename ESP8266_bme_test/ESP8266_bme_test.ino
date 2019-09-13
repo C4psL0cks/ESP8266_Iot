@@ -7,19 +7,21 @@
 #include <Adafruit_BME280.h>
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-const char* WIFI_SSID = "6021607";
-const char* WIFI_PASS = "17401449";
+const char *WIFI_SSID = "6021607";
+const char *WIFI_PASS = "17401449";
 
 Adafruit_BME280 bme;
 unsigned long delayTime;
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
 
     delay(500);
     Serial.print(".");
@@ -33,12 +35,15 @@ void setup() {
   Serial.println(F("BME280 test"));
   bool status;
   status = bme.begin(0x76);
-  if (!status) {
+  if (!status)
+  {
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
-    while (1);
+    while (1)
+      ;
   }
 }
-void loop() {
+void loop()
+{
   Serial.print("Temperature = ");
   float Temperature = bme.readTemperature();
   Serial.print(bme.readTemperature());
@@ -62,10 +67,11 @@ void loop() {
   report(Temperature, Pressure, Approx, Humidity);
   delay(10000);
 }
-void report(double temperature, double pressure, double approx, double humidity) {
+void report(double temperature, double pressure, double approx, double humidity)
+{
 
   StaticJsonBuffer<300> JSONbuffer;
-  JsonObject& JSONencoder = JSONbuffer.createObject();
+  JsonObject &JSONencoder = JSONbuffer.createObject();
 
   JSONencoder["temperature"] = temperature;
   JSONencoder["pressure"] = pressure;

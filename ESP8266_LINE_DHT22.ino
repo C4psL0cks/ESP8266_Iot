@@ -6,38 +6,29 @@
 
 #define DHTPIN 4
 #define DHTTYPE DHT22
-#define LINE_TOKEN "xxxx"
+
 DHT dht(DHTPIN, DHTTYPE);
 
-const char* WIFI_SSID = "xxx";
-const char* WIFI_PASS = "xxx";
+#define SSID        "--------------------"
+#define PASSWORD    "--------------------"
 
 int timeSinceLastRead = 0;
-
 WiFiClientSecure wifiClient;
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   // Connect to Wifi.
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(WIFI_SSID);
-
-  WiFi.persistent(false);
-  WiFi.mode(WIFI_OFF);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    // Check to see if
-    delay(500);
+  WiFi.begin(SSID, PASSWORD);
+  Serial.printf("WiFi connecting to %s\n", SSID);
+  while (WiFi.status() != WL_CONNECTED)
+  {
     Serial.print(".");
+    delay(400);
   }
-  Serial.println();
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
-  Serial.println();
+
   LINE.setToken(LINE_TOKEN);
   Serial.println(LINE.getVersion());
 
@@ -45,17 +36,19 @@ void setup() {
   Serial.println("-------------------------------------");
   Serial.println("Running DHT!");
   Serial.println("-------------------------------------");
-
 }
-void loop() {
+void loop()
+{
 
-  if (timeSinceLastRead > 2000) {
+  if (timeSinceLastRead > 2000)
+  {
 
     float h = dht.readHumidity();
     float t = dht.readTemperature();
     float f = dht.readTemperature(true);
 
-    if (isnan(h) || isnan(t) || isnan(f)) {
+    if (isnan(h) || isnan(t) || isnan(f))
+    {
       Serial.println("Failed to read from DHT sensor!");
       timeSinceLastRead = 0;
       return;
@@ -83,12 +76,13 @@ void loop() {
   timeSinceLastRead += 100;
 }
 
-void report(double humidity, double tempC, double tempF, double heatIndexC, double heatIndexF) {
+void report(double humidity, double tempC, double tempF, double heatIndexC, double heatIndexF)
+{
 
-  StaticJsonBuffer<300> JSONbuffer;   //Declaring static JSON buffer
-  JsonObject& JSONencoder = JSONbuffer.createObject();
+  StaticJsonBuffer<300> JSONbuffer; //Declaring static JSON buffer
+  JsonObject &JSONencoder = JSONbuffer.createObject();
 
-  JSONencoder["humidity"] =  humidity;
+  JSONencoder["humidity"] = humidity;
   JSONencoder["tempC"] = tempC;
   JSONencoder["tempF"] = tempF;
   JSONencoder["heatIndexC"] = heatIndexC;
@@ -99,8 +93,8 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
   Serial.println(JSONmessageBuffer);
   String message = JSONmessageBuffer;
 
-  if (message != NULL) {
-
+  if (message != NULL)
+  {
     LINE.notify("DHT22");
     LINE.notify(message);
     LINE.notifySticker(3, 240);
@@ -109,6 +103,4 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
     LINE.notifyPicture("xxxx", "https://xxx.jpg");
   }
   delay(3000);
-
 }
-

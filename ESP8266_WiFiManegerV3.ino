@@ -7,11 +7,12 @@
 #define BLYNK_PRINT Serial
 #define EEPROM_SALT 12663
 
-typedef struct {
-  int   salt = EEPROM_SALT;
-  char  blynkToken[33]  = "";
-  char  lineToken[45] = "";
-  char  namedevice[20] = "";
+typedef struct
+{
+  int salt = EEPROM_SALT;
+  char blynkToken[33] = "";
+  char lineToken[45] = "";
+  char namedevice[20] = "";
 } WMSettings;
 WMSettings settings;
 
@@ -24,7 +25,8 @@ Ticker ticker;
 WidgetLED LEDCLOSE(V2);
 WidgetLED LEDOPEN(V3);
 
-BLYNK_CONNECTED() {
+BLYNK_CONNECTED()
+{
   Blynk.syncVirtual(V0);
   Blynk.syncVirtual(V1);
   Blynk.syncVirtual(V2);
@@ -36,38 +38,46 @@ BLYNK_CONNECTED() {
   Blynk.syncAll();
 }
 
-BLYNK_WRITE(V0) {
+BLYNK_WRITE(V0)
+{
   STATUSRELAY = param.asInt();
-  if (STATUSRELAY == 0) {
+  if (STATUSRELAY == 0)
+  {
   }
-  if (STATUSRELAY == 1) {
+  if (STATUSRELAY == 1)
+  {
   }
 }
-BLYNK_WRITE(V1) {
+BLYNK_WRITE(V1)
+{
   BTRESET = param.asInt();
-  if (BTRESET == 1) {
+  if (BTRESET == 1)
+  {
     Reset = true;
     resetFactory();
   }
 }
 
-void tick() {
+void tick()
+{
   int state = digitalRead(BUILTIN_LED);
   digitalWrite(BUILTIN_LED, !state);
 }
-void configModeCallback (WiFiManager * myWiFiManager) {
+void configModeCallback(WiFiManager *myWiFiManager)
+{
   Serial.println("Entered config mode");
   Serial.println(WiFi.softAPIP());
   Serial.println(myWiFiManager->getConfigPortalSSID());
   ticker.attach(0.2, tick);
   Serial.println("  Enter Config Wifi ");
-
 }
-void saveConfigCallback () {
+void saveConfigCallback()
+{
   Serial.println("Should save config");
   shouldSaveConfig = true;
 }
-void resetFactory() {
+void resetFactory()
+{
   WMSettings defaults;
   settings = defaults;
   EEPROM.begin(512);
@@ -84,8 +94,8 @@ void resetFactory() {
   ESP.reset();
   delay(500);
 }
-void setup() {
-
+void setup()
+{
 
   Serial.begin(115200);
   //reset saved settings
@@ -101,7 +111,8 @@ void setup() {
   EEPROM.get(0, settings);
   EEPROM.end();
 
-  if (settings.salt != EEPROM_SALT) {
+  if (settings.salt != EEPROM_SALT)
+  {
     Serial.println("Invalid settings in EEPROM, trying with defaults");
     WMSettings defaults;
     settings = defaults;
@@ -119,12 +130,14 @@ void setup() {
   wifiManager.addParameter(&custom_name_device);
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
-  if (!wifiManager.autoConnect("SMART LOCK ALERT")) {
+  if (!wifiManager.autoConnect("SMART LOCK ALERT"))
+  {
     Serial.println("failed to connect and hit timeout");
     ESP.reset();
     delay(1000);
   }
-  if (shouldSaveConfig) {
+  if (shouldSaveConfig)
+  {
     Serial.println("Saving config");
     strcpy(settings.blynkToken, custom_blynk_token.getValue());
     strcpy(settings.lineToken, custom_line_token.getValue());
@@ -136,36 +149,44 @@ void setup() {
     EEPROM.put(0, settings);
     EEPROM.end();
   }
-  if (strlen(settings.blynkToken) == 0) {
+  if (strlen(settings.blynkToken) == 0)
+  {
     BLYNK_ENABLED = false;
   }
-  if (BLYNK_ENABLED) {
+  if (BLYNK_ENABLED)
+  {
     Blynk.config(settings.blynkToken);
   }
-  if (strlen(settings.lineToken) == 0) {
+  if (strlen(settings.lineToken) == 0)
+  {
     LINE_ENABLED = false;
   }
-  if (LINE_ENABLED) {
+  if (LINE_ENABLED)
+  {
     LINE.setToken(settings.lineToken);
   }
   Serial.println("connected...Success :)");
   ticker.detach();
   digitalWrite(BUILTIN_LED, LOW);
 
-  if (LINE_ENABLED) {
+  if (LINE_ENABLED)
+  {
     LINE.notify(String(settings.namedevice) + " Connect Finish!!");
     LINE.notify("!! Online !!");
     LINE.notify("Start..");
   }
-  if (BLYNK_ENABLED) {
+  if (BLYNK_ENABLED)
+  {
     Blynk.notify(String(settings.namedevice) + " Connect Finish !!");
     Blynk.notify("!! Online !!");
     Blynk.notify("Start..");
   }
 }
-void loop() {
+void loop()
+{
 
-  if (BLYNK_ENABLED) {
+  if (BLYNK_ENABLED)
+  {
     Blynk.run();
   }
 }

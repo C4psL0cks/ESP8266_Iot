@@ -7,8 +7,9 @@
 #include <Adafruit_BME280.h>
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-const char* WIFI_SSID = "6021607";
-const char* WIFI_PASS = "17401449";
+#define WIFI_SSID    "--------------------"
+#define WIFI_PASS    "--------------------"
+
 
 Adafruit_BME280 bme;
 unsigned long delayTime;

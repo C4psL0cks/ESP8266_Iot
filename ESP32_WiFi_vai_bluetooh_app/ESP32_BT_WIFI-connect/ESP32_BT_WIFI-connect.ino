@@ -8,7 +8,8 @@
 String bufferReceive = "";
 BluetoothSerial SerialBT;
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
 
   WiFi.mode(WIFI_STA);
@@ -18,16 +19,22 @@ void setup() {
   // Serial.println("The device started, now you can pair it with bluetooth!");
 }
 
-void loop() {
-  if (SerialBT.available()) {
+void loop()
+{
+  if (SerialBT.available())
+  {
     char c = SerialBT.read();
-    if (c == '\n') {
-      if (bufferReceive == "SCAN") {
+    if (c == '\n')
+    {
+      if (bufferReceive == "SCAN")
+      {
         Serial.println("scan start");
         int n = WiFi.scanNetworks();
         Serial.println("scan done");
-        if (n > 0) {
-          for (int i = 0; i < n; i++) {
+        if (n > 0)
+        {
+          for (int i = 0; i < n; i++)
+          {
             SerialBT.print(WiFi.SSID(i));
             SerialBT.print(',');
             delay(0); // nop
@@ -36,22 +43,32 @@ void loop() {
         SerialBT.print('\n');
       }
       bufferReceive = "";
-    } else {
+    }
+    else
+    {
       bufferReceive += c;
     }
-    
-    if (bufferReceive == "CONNECT:") {
+
+    if (bufferReceive == "CONNECT:")
+    {
       String parameter[10];
       int i = 0;
-      while(1) {
-        if (SerialBT.available()) {
+      while (1)
+      {
+        if (SerialBT.available())
+        {
           char c2 = SerialBT.read();
           // Serial.printf("Receive: %c\n", c2);
-          if (c2 == '\t') {
+          if (c2 == '\t')
+          {
             i++;
-          } else if (c2 == '\n') {
+          }
+          else if (c2 == '\n')
+          {
             break;
-          } else {
+          }
+          else
+          {
             parameter[i] += c2;
           }
         }

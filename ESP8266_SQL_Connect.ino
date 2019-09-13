@@ -7,9 +7,9 @@
 
 DHT dht(DHTPIN, DHTTYPE);
 
-const char* WIFISSID = "6021607";
-const char* PASSWORD = "17401449";
-const char* host = "192.168.0.3";
+const char *WIFISSID = "6021607";
+const char *PASSWORD = "17401449";
+const char *host = "192.168.0.3";
 
 int value = 0;
 String humiditys = "humidity=";
@@ -32,7 +32,8 @@ void connect()
 
   WiFi.begin(WIFISSID, PASSWORD);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
@@ -43,12 +44,15 @@ void connect()
   Serial.println(WiFi.localIP());
 }
 
-void setup() {
+void setup()
+{
 
   Serial.begin(115200);
   Serial.setTimeout(2000);
 
-  while (!Serial) { }
+  while (!Serial)
+  {
+  }
 
   Serial.println("Device Started");
   Serial.println("-------------------------------------");
@@ -58,19 +62,23 @@ void setup() {
   connect();
 }
 
-void loop() {
+void loop()
+{
   bool toReconnect = false;
-  if (toReconnect) {
+  if (toReconnect)
+  {
     connect();
   }
 
   //////// DHT
-  if (timeSinceLastRead > 2000) {
+  if (timeSinceLastRead > 2000)
+  {
     float h = dht.readHumidity();
     float t = dht.readTemperature();
     float f = dht.readTemperature(true);
 
-    if (isnan(h) || isnan(t) || isnan(f)) {
+    if (isnan(h) || isnan(t) || isnan(f))
+    {
       Serial.println("Failed to read from DHT sensor!");
       timeSinceLastRead = 0;
       return;
@@ -98,7 +106,8 @@ void loop() {
   delay(100);
   timeSinceLastRead += 100;
 }
-void report(double humidity, double tempC, double tempF, double heatIndexC, double heatIndexF) {
+void report(double humidity, double tempC, double tempF, double heatIndexC, double heatIndexF)
+{
 
   delay(15000);
   ++value;
@@ -107,12 +116,12 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
 
   const int httpPort = 80;
 
-  if (!client.connect(host, httpPort)) {
+  if (!client.connect(host, httpPort))
+  {
     Serial.println("connection failed");
     return;
   }
-  
- 
+
   String url = "/code/node/encode.php?";
   url += humiditys + humidity + tempCs + tempC + tempFs + tempF + heatIndexCs + heatIndexC + heatIndexFs + heatIndexF;
 
@@ -121,8 +130,10 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
 
   client.print(String("GET ") + url + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
   unsigned long timeout = millis();
-  while (client.available() == 0) {
-    if (millis() - timeout > 5000) {
+  while (client.available() == 0)
+  {
+    if (millis() - timeout > 5000)
+    {
       Serial.println(">>> Client Timeout !");
       client.stop();
       return;
@@ -130,12 +141,11 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
   }
 
   // Read all the lines of the reply from server and print them to Serial
-  while (client.available()) {
+  while (client.available())
+  {
     String line = client.readStringUntil('\r');
     Serial.print(line);
   }
   //Serial.println();
   Serial.println("closing connection");
-
 }
-

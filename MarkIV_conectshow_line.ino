@@ -5,24 +5,26 @@
 #include <WiFiManager.h>
 #include <ArduinoJson.h>
 
-#include <Wire.h>                   // Include library
+#include <Wire.h> // Include library
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #define OLED_RESET -1
-Adafruit_SSD1306 OLED(OLED_RESET);  // New object OLED
+Adafruit_SSD1306 OLED(OLED_RESET); // New object OLED
 
 char blynk_token[34] = "YOUR_BLYNK_TOKEN";
 
 bool shouldSaveConfig = false;
 
 //callback notifying us of the need to save config
-void saveConfigCallback () {
+void saveConfigCallback()
+{
   Serial.println("Should save config");
   shouldSaveConfig = true;
 }
 
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
   Serial.begin(115200);
   OLED.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -34,13 +36,16 @@ void setup() {
   //read configuration from FS json
   Serial.println("mounting FS...");
 
-  if (SPIFFS.begin()) {
+  if (SPIFFS.begin())
+  {
     Serial.println("mounted file system");
-    if (SPIFFS.exists("/config.json")) {
+    if (SPIFFS.exists("/config.json"))
+    {
       //file exists, reading and loading
       Serial.println("reading config file");
       File configFile = SPIFFS.open("/config.json", "r");
-      if (configFile) {
+      if (configFile)
+      {
         Serial.println("opened config file");
         size_t size = configFile.size();
         // Allocate a buffer to store contents of the file.
@@ -48,18 +53,22 @@ void setup() {
 
         configFile.readBytes(buf.get(), size);
         DynamicJsonBuffer jsonBuffer;
-        JsonObject& json = jsonBuffer.parseObject(buf.get());
+        JsonObject &json = jsonBuffer.parseObject(buf.get());
         json.printTo(Serial);
-        if (json.success()) {
+        if (json.success())
+        {
           Serial.println("\nparsed json");
           strcpy(blynk_token, json["blynk_token"]);
-
-        } else {
+        }
+        else
+        {
           Serial.println("failed to load json config");
         }
       }
     }
-  } else {
+  }
+  else
+  {
     Serial.println("failed to mount FS");
   }
   //end read
@@ -77,7 +86,8 @@ void setup() {
   //reset settings - for testing
   wifiManager.resetSettings();
 
-  if (!wifiManager.autoConnect("SMART LOCK ALERT DEMO")) {
+  if (!wifiManager.autoConnect("SMART LOCK ALERT DEMO"))
+  {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
@@ -92,14 +102,16 @@ void setup() {
   strcpy(blynk_token, custom_blynk_token.getValue());
 
   //save the custom parameters to FS
-  if (shouldSaveConfig) {
+  if (shouldSaveConfig)
+  {
     Serial.println("saving config");
     DynamicJsonBuffer jsonBuffer;
-    JsonObject& json = jsonBuffer.createObject();
+    JsonObject &json = jsonBuffer.createObject();
     json["blynk_token"] = blynk_token;
 
     File configFile = SPIFFS.open("/config.json", "w");
-    if (!configFile) {
+    if (!configFile)
+    {
       Serial.println("failed to open config file for writing");
     }
 
@@ -111,7 +123,7 @@ void setup() {
 
   Serial.println("local ip");
   Serial.println(WiFi.localIP());
-  
+
   OLED.clearDisplay();               //Clear display
   OLED.setTextColor(WHITE);          //Set text color
   OLED.setCursor(0, 0);              //Set display start position
@@ -119,12 +131,11 @@ void setup() {
   OLED.println("Welcome to ESP266"); //Type message
   OLED.setCursor(20, 20);            //Set display postion
   OLED.setTextSize(1);               //Set text size x2
-  OLED.println(WiFi.localIP());           //Type message
+  OLED.println(WiFi.localIP());      //Type message
   OLED.display();                    //Enable display
-
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
-
 }

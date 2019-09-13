@@ -8,10 +8,10 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 int timeSinceLastRead = 0;
-const char* WIFI_SSID = "6021607";
-const char* WIFI_PASS = "17401449";
-
 WiFiClient client;
+
+#define WIFI_SSID    "--------------------"
+#define WIFI_PASS    "--------------------"
 
 void setup() {
 
