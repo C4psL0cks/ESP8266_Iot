@@ -1,38 +1,30 @@
 #include <ESP8266WiFi.h>
 
-const char* ssid = "GrandlivingPlaceA8";
-const char* password = "ryba";
+#define SSID "--------------------"
+#define PASSWORD "--------------------"
 
 int ledPin = D7; // GPIO13 Arduino = D7 NodeMCU
 
 WiFiServer server(80);
 
-void setup() {
+void setup()
+{
 
   Serial.begin(115200);
   delay(10);
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 
-
   // Connect to WiFi network
-
-  Serial.println();
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-
-    delay(500);
+  WiFi.begin(SSID, PASSWORD);
+  Serial.printf("WiFi connecting to %s\n", SSID);
+  while (WiFi.status() != WL_CONNECTED)
+  {
     Serial.print(".");
-
+    delay(400);
   }
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-
+  Serial.printf("\nWiFi connected\nIP : ");
+  Serial.println(WiFi.localIP());
   // Start the server
 
   server.begin();
@@ -43,21 +35,21 @@ void setup() {
   Serial.print("http://");
   Serial.print(WiFi.localIP());
   Serial.println("/");
-
 }
-void loop() {
+void loop()
+{
 
   // Check if a client has connected
   WiFiClient client = server.available();
-  if (!client) {
+  if (!client)
+  {
     return;
-
   }
   // Wait until the client sends some data
   Serial.println("new client");
-  while (!client.available()) {
+  while (!client.available())
+  {
     delay(1);
-
   }
 
   // Read the first line of the request
@@ -67,17 +59,17 @@ void loop() {
 
   // Match the request
   int value = LOW;
-  if (request.indexOf("/LED=ON") != -1)  {
+  if (request.indexOf("/LED=ON") != -1)
+  {
 
     digitalWrite(ledPin, HIGH);
     value = HIGH;
-
   }
-  if (request.indexOf("/LED=OFF") != -1)  {
+  if (request.indexOf("/LED=OFF") != -1)
+  {
     digitalWrite(ledPin, LOW);
 
     value = LOW;
-
   }
 
   // Set ledPin according to the request
@@ -91,13 +83,14 @@ void loop() {
   client.println("<html>");
   client.print("Led pin is now: ");
 
-  if (value == HIGH) {
+  if (value == HIGH)
+  {
 
     client.print("On");
-
-  } else {
+  }
+  else
+  {
     client.print("Off");
-
   }
 
   client.println("<br><br>");
@@ -109,5 +102,4 @@ void loop() {
 
   Serial.println("Client disonnected");
   Serial.println("");
-
 }
