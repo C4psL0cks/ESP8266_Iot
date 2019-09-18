@@ -8,13 +8,13 @@
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
-#define FIREBASE_HOST "arunsawad-5f45d.firebaseio.com"
-#define FIREBASE_AUTH "Rk6fRjLB2Kwt77tf8rCgTHfj9lt6SwM17QPv9P3u"
+#define FIREBASE_HOST "xxxx-xxxx.firebaseio.com"
+#define FIREBASE_AUTH "xxxx"
 
-#define WIFI_SSID "arunsawad" //แก้ไข
-#define WIFI_PASSWORD "1111155555" //แก้ไข
+#define WIFI_SSID "xxxx" //แก้ไข
+#define WIFI_PASSWORD "xxxx" //แก้ไข
 
-#define LINE_TOKEN "07L3O32HeengjA8TCukEElvd6ijXazDcgsbPOSV7jNl"
+#define LINE_TOKEN "xxxxx"
 
 /// time
 struct tm* p_tm;
