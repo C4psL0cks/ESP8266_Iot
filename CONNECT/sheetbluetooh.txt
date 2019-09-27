@@ -15,3 +15,5 @@ pin_num:1
 
 // text 
 *12|ggggggg#
+
+*13|dfsf#

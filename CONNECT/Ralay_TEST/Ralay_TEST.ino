@@ -1,5 +1,5 @@
 
-int relay1 = 6;
+int relay1 = 7;
 int relay2 = 7;
 
 void setup() {
