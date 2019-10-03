@@ -1,5 +1,4 @@
-// Serial.println("Start...Setup Buletooth");
-//
+// HC-05 Setup
 //#include <SoftwareSerial.h>
 //SoftwareSerial mySerial(2, 3); // TX, RX
 //void setup()
@@ -18,53 +17,65 @@
 //    mySerial.write(Serial.read());
 //}
 
-
-// Serial.println("Start...Setup Buletooth");
+// Read HC-05
 #include <SoftwareSerial.h>
-SoftwareSerial bluetooth(2, 3);   //TX, RX
+int bluetoothTx = 2;
+int bluetoothRx = 3;
+SoftwareSerial bluetooth(bluetoothTx, bluetoothRx);
 
 void setup() {
-  Serial.begin(9600);  // Debug Serial
+  Serial.begin(9600);
   while (!Serial);
-  bluetooth.begin(9600);   // Bluetooth Serial
-  Serial.println("Start...Read Buletooth");
+  bluetooth.begin(9600);
+ Serial.println("\nChat HC-05 Version\n");
 }
 
 void loop() {
 
-  if (bluetooth.available()) {
-    while (bluetooth.available()) {
-      Serial.write(bluetooth.read());
-    }
+  bluetooth.listen();
+  if (Serial.available()) {
+    bluetooth.write(Serial.read());
   }
-
-  //  if (bluetooth.available()) {
-  bluetooth.print("ans");
-  //  }
-  delay(1000);
+  if (bluetooth.available()) {
+    Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
+    //bluetooth.print("a");
+  }
 }
 
 
-// Check buff
+//HM-10 Setup
 //#include <SoftwareSerial.h>
-//int bluetoothTx = 2;  // TX-O pin of bluetooth mate
-//int bluetoothRx = 3;  // RX-I pin of bluetooth mate
-//SoftwareSerial bluetooth(bluetoothTx, bluetoothRx);   //TX, RX
+//SoftwareSerial soft(2, 3);
 //
 //void setup() {
 //  Serial.begin(9600);  // Debug Serial
+//  soft.begin(9600);   // Bluetooth Serial
+//}
+//
+//void loop() {
+//  if (Serial.available()) {
+//    soft.write(Serial.read());
+//  }
+//  if (soft.available()) {
+//    Serial.write(soft.read());
+//  }
+//}
+
+//#include <SoftwareSerial.h>
+//SoftwareSerial soft(2, 3);
+//void setup() {
+//  Serial.begin(9600);  // Debug Serial
 //  while (!Serial);
-//  bluetooth.begin(9600);   // Bluetooth Serial
-//  Serial.println("Hello.");
+//  soft.begin(9600);   // Bluetooth Serial
+//  Serial.println("\nChat BLEMini Version\n");
 //}
 //
 //void loop() {
 //
 //  if (Serial.available()) {
-//    //bluetooth.write(Serial.read());
+//    soft.write(Serial.read());
 //  }
-//  if (bluetooth.available()) {
-//    Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
-//    bluetooth.write("a\n");
+//  if (soft.available()) {
+//    Serial.write(soft.read());
 //  }
 //}
