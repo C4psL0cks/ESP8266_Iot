@@ -18,29 +18,27 @@
 //}
 
 // Read HC-05
-//#include <SoftwareSerial.h>
-//int bluetoothTx = 2;
-//int bluetoothRx = 3;
-//SoftwareSerial bluetooth(bluetoothTx, bluetoothRx);
-//
-//void setup() {
-//  Serial.begin(9600);
-//  while (!Serial);
-//  bluetooth.begin(9600);
-// Serial.println("\nChat HC-05 Version\n");
-//}
-//
-//void loop() {
-//
-//  bluetooth.listen();
-//  if (Serial.available()) {
-//    bluetooth.write(Serial.read());
-//  }
-//  if (bluetooth.available()) {
-//    Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
-//    //bluetooth.print("a");
-//  }
-//}
+#include <SoftwareSerial.h>
+int bluetoothTx = 2;
+int bluetoothRx = 3;
+SoftwareSerial bluetooth(bluetoothTx, bluetoothRx);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial);
+  bluetooth.begin(9600);
+ Serial.println("\nChat HC-05 Version\n");
+}
+
+void loop() {
+  if (Serial.available()) {
+    bluetooth.write(Serial.read());
+  }
+  if (bluetooth.available()) {
+    Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
+    //bluetooth.print("a");
+  }
+}
 
 
 //HM-10 Setup
@@ -61,22 +59,24 @@
 //  }
 //}
 
-#include <SoftwareSerial.h>
-SoftwareSerial bluetooth(9, 8); // D9 TX, D8 Rx
-void setup() {
-  Serial.begin(9600);  // Debug Serial
-  while (!Serial);
-  bluetooth.begin(9600);   // Bluetooth Serial
-  Serial.println("\nChat BLEMini Version\n");
-}
-
-void loop() {
-
-  if (Serial.available()) {
-    bluetooth.write(Serial.read());
-  }
-  if (bluetooth.available()) {
-    Serial.write(bluetooth.read());
-    bluetooth.print("a");
-  }
-}
+//#include <SoftwareSerial.h>
+//SoftwareSerial bluetooth(9, 8); // D9 TX, D8 Rx
+//void setup() {
+//  Serial.begin(9600);  // Debug Serial
+//  while (!Serial);
+//  bluetooth.begin(9600);   // Bluetooth Serial
+//  Serial.println("\nChat BLEMini Version\n");
+//}
+//
+//void loop() {
+//
+//  if (Serial.available()) {
+//    bluetooth.write(Serial.read());
+//  }
+//  if (bluetooth.available()) {
+//    String text = bluetooth.readString();
+//    //Serial.write();
+//    Serial.println(text);
+//    bluetooth.write("a");
+//  }
+//}
