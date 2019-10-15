@@ -48,8 +48,10 @@ void report(double value1, double value2, double value3) {
   Serial.println("Authenticating Device...");
 
   http.begin("http://maker.ifttt.com/trigger/data/with/key/d-K9LQ5IDy97XIamb7HKPm");                                                                                           //Specify request destination
-  http.addHeader("Content-Type", "application/json");                                    //Specify content-type header
-  //http.addHeader("Accept", "application/json");
+  http.addHeader("User-Agent", "ESP8266HTTPClient");
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("Accept", "application/json");
+  http.addHeader("Connection", "close");
   int httpCode = http.POST(JSONmessageBuffer);                                            //Send the request
   String payload = http.getString();                                                      //Get the response payload
   Serial.print("HTTPS CODE :");
