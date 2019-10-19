@@ -65,10 +65,9 @@ void loop()
   Serial.println(" %");
   Serial.println();
   report(Temperature, Pressure, Approx, Humidity);
-  delay(10000);
+  delay(1000);
 }
-void report(double temperature, double pressure, double approx, double humidity)
-{
+void report(double temperature, double pressure, double approx, double humidity){
 
   StaticJsonBuffer<300> JSONbuffer;
   JsonObject &JSONencoder = JSONbuffer.createObject();
@@ -80,17 +79,5 @@ void report(double temperature, double pressure, double approx, double humidity)
 
   char JSONmessageBuffer[300];
   JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
-  //Serial.println(JSONmessageBuffer);
-  Serial.println("Authenticating Device...");
-  HTTPClient http;
-  http.begin("http://1b1c47a5.ngrok.io/code/dbtestbme/inputjson.php");
-  http.header("User-Agent: ESP8266:Node1");
-  http.header("Connection: close");
-  http.addHeader("Content-Type", "application/json");
-  http.addHeader("Accept", "application/json");
-  int httpCode = http.POST(JSONmessageBuffer);
-  String payload = http.getString();
-  Serial.println("HTTPS CODE :" + String(httpCode));
-  Serial.println("Payload :" + String(payload));
-  http.end();
+  Serial.println(JSONmessageBuffer);
 }
