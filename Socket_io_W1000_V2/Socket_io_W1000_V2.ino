@@ -4,14 +4,14 @@
 SocketIOClient client;
 
 byte Mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-char Hostname[] = "192.168.0.4";
+char Hostname[] = "192.168.0.2";
 int Port = 3484;
 
 extern String RID;
 extern String Rname;
 extern String Rcontent;
 
-const int sensorPin = A0;
+const int sensorPin = A5;
 bool check = false;
 bool around = false;
 int value, values;
