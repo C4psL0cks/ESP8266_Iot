@@ -52,7 +52,7 @@ void loop() {
     Serial.println(Firebase.error());
     return;
   }
-  
+
   //  if (Firebase.getString("/user/token") == token) {
   //    state = true;
   //  }

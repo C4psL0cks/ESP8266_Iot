@@ -41,7 +41,7 @@ void setup() {
   Serial.println("WiFi connected.");
   Serial.print("My IP address: ");
   Serial.println(WiFi.localIP());
-  
+
   Serial.println(F("BME280 test"));
   bool status;
   status = bme.begin(0x76);
@@ -54,7 +54,7 @@ void setup() {
 
 void loop() {
 
-Serial.print("Temperature = ");
+  Serial.print("Temperature = ");
   float Temperature = bme.readTemperature();
   Serial.print(bme.readTemperature());
   Serial.println(" *C");
@@ -83,7 +83,7 @@ void sendDataToCorlysis(float temperature, float humidity) {
   static long counter = 0;
 
   char payloadStr[150];
-  sprintf(payloadStr, "dht11_data temperature=%d.%02d,humidity=%d.%02d", (int)temperature, (int)abs(temperature * 100) % 100,(int)humidity, (int)abs(humidity * 100) % 100);
+  sprintf(payloadStr, "dht11_data temperature=%d.%02d,humidity=%d.%02d", (int)temperature, (int)abs(temperature * 100) % 100, (int)humidity, (int)abs(humidity * 100) % 100);
   Serial.println(payloadStr);
 
   char corlysisUrl[200];

@@ -6,8 +6,7 @@ WiFiClientSecure client;
 int relay1 = 23; /*output pin1*/
 int relay2 = 22; /*output pin2*/
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
   delay(100);
   pinMode(relay1, OUTPUT);
@@ -15,9 +14,9 @@ void setup()
   digitalWrite(relay1, 1); /*status when first start*/
   digitalWrite(relay2, 1); /*1 = out.vcc 0 = out.gnd*/
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(600);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
   }
   Serial.print("conected to ");
   Serial.println(ssid);
@@ -45,27 +44,23 @@ void loop()
     Valueclosed = content.indexOf("ประตูจงปิด");
     Valuetester = content.indexOf("ทดสอบ");
 
-    if (ValueError > 0)
-    {
+    if (ValueError > 0) {
       delay(9000);
     }
-    else
-    {
+    else {
       Serial.print("   Open Status : ");
       Serial.print(Valueopend);
       Serial.print("   Close Status : ");
       Serial.print(Valueclosed);
       Serial.print("");
 
-      if (Valueopend and Valueclosed and Valuetester == -1)
-      {
+      if (Valueopend and Valueclosed and Valuetester == -1) {
         Serial.print("\nAwaiting Command\n");
         digitalWrite(relay1, 1);
         digitalWrite(relay2, 1);
       }
 
-      if (Valueopend != -1)
-      {
+      if (Valueopend != -1) {
         digitalWrite(relay1, 1);
         digitalWrite(relay2, 0);
         Serial.print("\nDoor Open\n");
@@ -73,8 +68,7 @@ void loop()
         digitalWrite(relay1, 1);
         digitalWrite(relay2, 1);
       }
-      if (Valueclosed != -1)
-      {
+      if (Valueclosed != -1) {
         digitalWrite(relay1, 0);
         digitalWrite(relay2, 1);
         Serial.print("\nDoor Close\n");
@@ -82,9 +76,7 @@ void loop()
         digitalWrite(relay1, 1);
         digitalWrite(relay2, 1);
       }
-
-      if (Valuetester != -1)
-      {
+      if (Valuetester != -1) {
         digitalWrite(relay1, 1);
         digitalWrite(relay2, 0);
         Serial.print("\nTest Door Open");
@@ -101,8 +93,7 @@ void loop()
       }
     }
   }
-  else
-  {
+  else {
     Serial.println("Fail. error code " + String(httpCode));
   }
   delay(1000);

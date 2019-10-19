@@ -1,6 +1,5 @@
 #include <ESP8266WiFi.h>
 #include <TridentTD_LineNotify.h>
-
 #define SSID "--------------------"
 #define PASSWORD "--------------------"
 #define LINE_TOKEN "--------------------"
@@ -12,9 +11,7 @@
 int doorState = 0;
 int ledState = 0;
 
-void setup()
-{
-
+void setup(){
   pinMode(DoorGpioPin, INPUT);
   pinMode(ledGpioPin, OUTPUT);
   // Connect to WiFi network
@@ -26,8 +23,7 @@ void setup()
 
   WiFi.begin(SSID, PASSWORD);
   Serial.printf("WiFi connecting to %s\n", SSID);
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED){
     Serial.print(".");
     delay(400);
   }
@@ -40,8 +36,7 @@ void setup()
   // ตัวอย่างส่งข้อความ
   LINE.notify("เชื่อมต่อแล้ว");
 }
-void loop()
-{
+void loop(){
   if (digitalRead(DoorGpioPin) == HIGH && doorState == opened)
   { // Print button pressed message.
     LINE.notify("ปิด");

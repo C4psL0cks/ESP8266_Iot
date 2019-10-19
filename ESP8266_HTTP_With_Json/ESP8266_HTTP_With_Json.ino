@@ -5,8 +5,7 @@
 #define WIFI_SSID "--------------------"
 #define WIFI_PASS "--------------------"
 
-void connect()
-{
+void connect() {
   // Connect to Wifi.
   Serial.println();
   Serial.println();
@@ -14,8 +13,7 @@ void connect()
   Serial.println(WIFI_SSID);
   WiFi.begin(SSID, PASSWORD);
   Serial.printf("WiFi connecting to %s\n", SSID);
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     delay(400);
   }
@@ -27,15 +25,13 @@ void setup()
 {
 
   Serial.begin(115200);
-  while (!Serial){}
+  while (!Serial) {}
   connect();
 }
 
-void loop()
-{
+void loop() {
 
-  if (WiFi.status() == WL_CONNECTED)
-  { //Check WiFi connection status
+  if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
 
     StaticJsonBuffer<300> JSONbuffer; //Declaring static JSON buffer
     JsonObject &JSONencoder = JSONbuffer.createObject();
@@ -65,11 +61,8 @@ void loop()
 
     http.end(); //Close connection
   }
-  else
-  {
-
+  else {
     Serial.println("Error in WiFi connection");
   }
-
   delay(10000); //Send a request every 30 seconds
 }

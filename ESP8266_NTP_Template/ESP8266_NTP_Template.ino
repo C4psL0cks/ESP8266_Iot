@@ -67,7 +67,7 @@ void loop() {
   Serial.println("Temperature: " + String(Temperature) + "°C");
   Serial.println("Presure : " + String(Pressure) + "Pa");
 
-  if (Minutes == 0 || Minutes == 5 || Minutes == 10 || Minutes == 15 || Minutes == 20 || Minutes == 25 || Minutes == 30 || Minutes == 35 || Minutes == 40 || Minutes == 45 || Minutes == 50 || Minutes == 55 ) {
+  if (Minutes % 5 == 0) {
 
     Serial.println("CHECK:" + String(Minutes));
     if (Humidity >= 70 && checkHumidity == false) {

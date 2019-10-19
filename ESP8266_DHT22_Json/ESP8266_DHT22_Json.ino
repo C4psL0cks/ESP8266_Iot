@@ -85,12 +85,12 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
   int httpCode = http.POST(JSONmessageBuffer);                                            //Send the request
   String payload = http.getString();                                                      //Get the response payload
 
-  //Serial.print("HTTPS CODE :");   
+  //Serial.print("HTTPS CODE :");
   //Serial.println(httpCode);                                                              //Print HTTP return code
-  Serial.print("Payload :");   
+  Serial.print("Payload :");
   Serial.print(payload);                                                                 //Print request response payload
   http.end();                                                                            //Close connection
   Serial.print("Reported!");
   delay(3000);                                                                          //Send a request every 30 seconds
-  
+
 }

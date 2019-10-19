@@ -8,8 +8,8 @@ HTTPClient http;
 #define SSID "--------------------"
 #define PASSWORD "--------------------"
 
-void setup()
-{
+void setup(){
+  
   Serial.begin(115200);
   Serial.println();
 
@@ -46,7 +46,6 @@ void report(double value1, double value2, double value3) {
   Serial.println(JSONmessageBuffer);
 
   Serial.println("Authenticating Device...");
-
   http.begin("http://maker.ifttt.com/trigger/data/with/key/d-K9LQ5IDy97XIamb7HKPm");                                                                                           //Specify request destination
   http.addHeader("User-Agent", "ESP8266HTTPClient");
   http.addHeader("Content-Type", "application/json");

@@ -157,7 +157,7 @@ void report(double humidity, double tempC, double tempF, double heatIndexC, doub
     http.begin("http://3d2f9a7e.ngrok.io/code/node/inputjson.php");                                                                                           //Specify request destination
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Accept", "application/json");
- 
+
     httpCode = http.POST(JSONmessageBuffer);
 
     if (httpCode > 0) {

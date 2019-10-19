@@ -6,7 +6,7 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(115200);
   while (!Serial)
-  pinMode(D1, OUTPUT);
+    pinMode(D1, OUTPUT);
   pinMode(D2, OUTPUT);
 }
 
