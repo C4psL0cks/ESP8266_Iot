@@ -4,8 +4,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-const char* WIFISSID = "6021607";
-const char* PASSWORD = "17401449";
+#define WIFI_SSID   "6021607"
+#define WIFI_PASS   "17401449"
+
 const char* host = "api.pushingbox.com";
 const String devid = "v9BAE38FD0936517";
 WiFiClient client;
@@ -13,29 +14,24 @@ WiFiClient client;
 void setup() {
 
   Serial.begin(115200);
-  Serial.setTimeout(2000);
-  Serial.println("Device Started");
+  Serial.println();
   Serial.println("-------------------------------------");
-  Serial.println("Running DHT!");
+  Serial.println("Running!");
   Serial.println("-------------------------------------");
-  Serial.print("Connecting to ");
-  Serial.println(WIFISSID);
-
-  WiFi.begin(WIFISSID, PASSWORD);
-
+  // Connect to Wifi.
+  Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
+  Serial.println();
 }
 
 void loop() {
-
-
 
   int value1 = 6;
   int value2 = 7;

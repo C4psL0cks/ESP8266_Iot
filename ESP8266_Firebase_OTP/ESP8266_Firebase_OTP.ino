@@ -15,19 +15,24 @@ String chipid = "";
 String value = "";
 String values = "";
 String battery = "90";
+
 void setup() {
   Serial.begin(115200);
-
-  // connect to wifi.
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("connecting");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-  }
   Serial.println();
-  Serial.print("connected: ");
+  Serial.println("-------------------------------------");
+  Serial.println("Running!");
+  Serial.println("-------------------------------------");
+  // Connect to Wifi.
+  Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
+  Serial.println();
 
   Serial.printf(" ESP8266 Chip id = %08X\n", ESP.getChipId());
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
@@ -42,7 +47,6 @@ void loop() {
     values = value;
   }
   if (value != values) {
-
     state = !state;
     values = value;
   }
