@@ -102,3 +102,4 @@ void Sendvalue(float temperature, float pressure, float approx, float humidity) 
   Serial.println("Payload :" + String(payload));
   http.end();
 }
+
