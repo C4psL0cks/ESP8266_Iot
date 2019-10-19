@@ -78,3 +78,4 @@ void report(double temperature, double pressure, double approx, double humidity)
   JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
   Serial.println(JSONmessageBuffer);
 }
+
