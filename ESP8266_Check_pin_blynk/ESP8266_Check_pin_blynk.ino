@@ -63,7 +63,7 @@ void loop() {
       if (chanal1 < 0) {
         chanal1 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "TABLET 1 Onclick", chanal1);
+      Blynk.email("@email.nu.ac.th", "TABLET 1 Onclick", chanal1);
       Serial.println("BT1 : ON");
       Serial.println(chanal1);
     }
@@ -74,7 +74,7 @@ void loop() {
       if (chanal2 < 0) {
         chanal2 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "TABLET 2 Onclick", chanal2);
+      Blynk.email("@email.nu.ac.th", "TABLET 2 Onclick", chanal2);
       Serial.println("BT2 : ON");
       Serial.println(chanal2);
     }
@@ -85,7 +85,7 @@ void loop() {
       if (chanal3 < 0) {
         chanal3 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "TABLET 3 Onclick", chanal3);
+      Blynk.email("@email.nu.ac.th", "TABLET 3 Onclick", chanal3);
       Serial.println("BT3 : ON");
       Serial.println(chanal3);
     }
@@ -96,7 +96,7 @@ void loop() {
       if (chanal4 < 0) {
         chanal4 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "TABLET 4 Onclick", chanal4);
+      Blynk.email("@email.nu.ac.th", "TABLET 4 Onclick", chanal4);
       Serial.println("BT3 : ON");
       Serial.println(chanal4);
     }
@@ -115,7 +115,7 @@ void loop() {
       if (chanal3 < 0) {
         chanal3 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "MORNING Onclick", "MORNING Onclick");
+      Blynk.email("@email.nu.ac.th", "MORNING Onclick", "MORNING Onclick");
       Serial.println("MORNING : ON");
     }
   }
@@ -133,7 +133,7 @@ void loop() {
       if (chanal4 < 0) {
         chanal4 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "AFTERNOON Onclick", "AFTERNOON Onclick");
+      Blynk.email("@email.nu.ac.th", "AFTERNOON Onclick", "AFTERNOON Onclick");
       Serial.println("AFTERNOON : ON");
     }
   }
@@ -155,7 +155,7 @@ void loop() {
       if (chanal4 < 0) {
         chanal4 = 0;
       }
-      Blynk.email("wattanakooln57@email.nu.ac.th", "EVENNING Onclick", "EVENNING Onclick");
+      Blynk.email("@email.nu.ac.th", "EVENNING Onclick", "EVENNING Onclick");
       Serial.println("EVENNING : ON");
     }
   }
