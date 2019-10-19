@@ -1,19 +1,12 @@
 #include <ESP8266WiFi.h>
 #include <TridentTD_LineNotify.h>
-#define DoorGpioPin D1
-#define ledGpioPin D2
-#define closed 0
-#define opened 1
+
 #define WIFI_SSID   "6021607"
 #define WIFI_PASS   "17401449"
-
-int doorState = 0;
-int ledState = 0;
+#define LINE_TOKEN  "-----------"
 
 void setup() {
   Serial.begin(115200);
-  pinMode(DoorGpioPin, INPUT);
-  pinMode(ledGpioPin, OUTPUT);
   Serial.println();
   Serial.println("-------------------------------------");
   Serial.println("Running!");
@@ -29,21 +22,13 @@ void setup() {
   Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
   Serial.println();
+  LINE.setToken(LINE_TOKEN);
+  delay(500);
+  LINE.notify("รอการเชื่อมต่อเวลาสักครู่...สำเร็จแล้ว");
+
 }
 
 void loop() {
-  if (digitalRead(DoorGpioPin) == HIGH && doorState == opened) {
-    LINE.notify("ปิด");
-    Serial.println("Close");
-    doorState = closed;
-    ledState = 1; //on
-    digitalWrite(ledGpioPin, ledState);
-  }
-  if (digitalRead(DoorGpioPin) == LOW && doorState == closed) {
-    LINE.notify("เปิด");
-    Serial.println("Open");
-    doorState = opened;
-    ledState = 0; //off
-    digitalWrite(ledGpioPin, ledState);
-  }
+  // put your main code here, to run repeatedly:
+
 }

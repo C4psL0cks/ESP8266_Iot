@@ -7,39 +7,36 @@
 #include <Adafruit_BME280.h>
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-const char *WIFI_SSID = "6021607";
-const char *WIFI_PASS = "17401449";
+#define WIFI_SSID   "6021607"
+#define WIFI_PASS   "17401449"
 
 Adafruit_BME280 bme;
-unsigned long delayTime;
+bool status;
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(WIFI_SSID);
+  Serial.println("-------------------------------------");
+  Serial.println("Running!");
+  Serial.println("-------------------------------------");
+  // Connect to Wifi.
+  Serial.println();
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
+  while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println();
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
   Serial.println();
 
   Serial.println(F("BME280 test"));
-  bool status;
   status = bme.begin(0x76);
-  if (!status)
-  {
+  if (!status){
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
-    while (1)
-      ;
+    while (1);
   }
 }
 void loop()

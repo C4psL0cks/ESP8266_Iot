@@ -8,10 +8,8 @@
 #include <Adafruit_BME280.h>
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-
-// Wi-Fi settings
-const char* ssid = "6021607";
-const char* password = "17401449";
+#define WIFI_SSID   "6021607"
+#define WIFI_PASS   "17401449"
 
 // Corlysis Setting - click to the database to get those info
 const char* db_name = "sensor_db";
@@ -20,30 +18,29 @@ const unsigned long delayTimeMs = 20000;
 
 Adafruit_BME280 bme;
 HTTPClient http;
-
+bool status;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("NodeMCU + DHT11 + Corlysis");
-
   //Wi-Fi connection
-  Serial.print("Connecting to the: ");
-  Serial.println(ssid);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-
+  Serial.println();
+  Serial.println("-------------------------------------");
+  Serial.println("Running!");
+  Serial.println("-------------------------------------");
+  // Connect to Wifi.
+  Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
+    delay(500);
     Serial.print(".");
   }
-
-  Serial.println();
-  Serial.println("WiFi connected.");
-  Serial.print("My IP address: ");
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
+  Serial.println();
 
   Serial.println(F("BME280 test"));
-  bool status;
   status = bme.begin(0x76);
   if (!status) {
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
@@ -77,7 +74,6 @@ void loop() {
   sendDataToCorlysis(Temperature, Humidity);
   delay(delayTimeMs);
 }
-
 
 void sendDataToCorlysis(float temperature, float humidity) {
   static long counter = 0;
