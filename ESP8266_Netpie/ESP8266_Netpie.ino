@@ -100,29 +100,34 @@ void loop() {
     temp = Read / 5.092;
     Read = (int)temp;
     Val = ((Read % 100) / 10.0);
-    Serial.println("Voltage:" + String(Val));
+    //Serial.println("Voltage:" + String(Val));
 
     pinMode(TRIGGER_PIN, OUTPUT);
     pinMode(ECHO_PIN, INPUT);
-    pinMode(BUILTIN_LED, OUTPUT);
     digitalWrite(TRIGGER_PIN, LOW);
-    //delayMicroseconds(2);
+    delayMicroseconds(2);
     digitalWrite(TRIGGER_PIN, HIGH);
-    //delayMicroseconds(5);
+    delayMicroseconds(10);
     digitalWrite(TRIGGER_PIN, LOW);
+
     duration = pulseIn(ECHO_PIN, HIGH);
-    distance = (duration / 2) / 29.1;
+    distance = duration * 0.034 / 2;
+    if (distance > 30) {
+      distance = 0;
+    }
     //Serial.println(distance);
-    
+
     if ((sec % 5) == 0) {
-      Serial.println("CHECK:" + String(sec));
-      if (distance < 10  && checksend == false) {
-        LINE.notify("ถังขยะเต็ม");
+      Serial.println("CHECK:" + String(sec)); 
+      // ถ้า sec ก็คือ หน่วยนาที มันหาร 5 ลงตัว มันจะเข้าเคสนี้ละเช็คต่อว่า ขยะ เต็มมั้ยถ้าเต็ม มันจะส่งไปที่ไลน์ แค่ครั่งเดียว
+      if (distance < 10 && checksend == false) { // เช็คว่า ขยะเต็มมั้ยถ้าเต็ม
+        LINE.notify("ถังขยะเต็ม"); // ส่งไปที่ line
+        Serial.println("Full");
         checksend = true;
       }
     }
-    else {
-      Serial.println("RESRT:" + String(sec));
+    else { // ถ้าไม่เข้าเคส ข้างบน ให้ reset ตัวแปลการส่ง 1 ครั้ง ให้สามารถส่งใน 5 นาทีถัดไปได้
+      //Serial.println("RESRT:" + String(sec));
       checksend = false;
     }
 
@@ -142,7 +147,9 @@ void loop() {
     } else {
       timer += 100;
     }
-  } else {
+  }
+  //=========================ถ้าต่อไม่ติด==========================
+  else {
     Serial.println("connection lost, reconnect...");
     if (timer >= 5000) {
       microgear.connect(APPID);
@@ -150,5 +157,5 @@ void loop() {
     }
     else timer += 100;
   }
-  delay(100);
+  delay(300);
 }
