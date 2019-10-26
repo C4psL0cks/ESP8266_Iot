@@ -27,7 +27,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
   bluetooth.begin(9600);
- Serial.println("\nChat HC-05 Version\n");
+  Serial.println("\nChat HC-05 Version\n");
 }
 
 void loop() {
@@ -35,9 +35,14 @@ void loop() {
     bluetooth.write(Serial.read());
   }
   if (bluetooth.available()) {
-    Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
-    //bluetooth.print("a");
+    char text = bluetooth.read();
+    Serial.println(text);
+    if (text == 'a') {
+      bluetooth.write("ANS");
+    }
+    //Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
   }
+
 }
 
 
