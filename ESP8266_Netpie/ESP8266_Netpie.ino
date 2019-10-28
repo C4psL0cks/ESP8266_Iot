@@ -10,8 +10,8 @@
 // OLED
 #include <ACROBOTIC_SSD1306.h>
 // wifi
-#define SSID_WIFI    "AndroidAPD261"
-#define PASSWORD_WIFI   "mojijosh"
+#define SSID_WIFI    "6021607"
+#define PASSWORD_WIFI   "17401449"
 // Line
 #define LINE_TOKEN  "0lbZcis2QugRyJv6SZaxzcK2STZOkzWqD7TnDqegFbM"
 // Netpie
@@ -28,18 +28,19 @@
 #define MAX_HUMID 100
 
 // sensor Ultrasonic
-#define TRIGGER_PIN  D5
-#define ECHO_PIN     D6
+const int trigPin = 14;  //D5
+const int echoPin = 12;  //D6
 
 WiFiClient client;
 
 // ตัวแปลสำหรับ sensor ทั้งสองตัว
 int timer = 0;
 char str[32];
-long duration, distance;
 float temp;
 int Read;
 float Val;
+long duration;
+int distance;
 
 /// time NTP server
 struct tm* p_tm;
@@ -65,6 +66,8 @@ void setup() {
   microgear.on(MESSAGE, onMsghandler);
   microgear.on(CONNECTED, onConnected);
   Serial.begin(115200);
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   Wire.begin();
   oled.init();                      // Initialze SSD1306 OLED display
   oled.clearDisplay();              // Clear screen
@@ -120,16 +123,17 @@ void loop() {
     oled.putString("Volt:" + String(Val));
 
     // ส่วนของ sensor Ultrasonic
-    pinMode(TRIGGER_PIN, OUTPUT);
-    pinMode(ECHO_PIN, INPUT);
-    digitalWrite(TRIGGER_PIN, LOW);
-    delayMicroseconds(2);
-    digitalWrite(TRIGGER_PIN, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(TRIGGER_PIN, LOW);
 
-    duration = pulseIn(ECHO_PIN, HIGH);
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    duration = pulseIn(echoPin, HIGH);
     distance = duration * 0.034 / 2;
+    Serial.print("Distance: ");
+    Serial.println(distance);
+
     if (distance > 30) { // ปกติถังลึก 30 cm ถ้า sensor อ่านได้ เกิน 30 แสดงว่าเกิดค่าที่ error ให้ set ค่ากลับไปเป็น 0
       distance = 0; // set ให้ = 0
     }
@@ -157,7 +161,7 @@ void loop() {
     root.printTo(jsonData); // จับยัดเข้า object json
     //Serial.println(jsonData);
 
-    if (timer >= 1000) { // ทุกๆ 1 วิจะทำการส่งค่าไป netpie
+    if (timer >= 500) { // ทุกๆ 1 วิจะทำการส่งค่าไป netpie
       sprintf(str, "%d,%.2f", distance, Val);  // แสดงค่าที่ได้รับมาจากด้านบน
       Serial.println(str);
       Serial.print("Sending -- >");
