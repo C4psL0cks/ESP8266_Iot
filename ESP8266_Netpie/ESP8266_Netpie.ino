@@ -1,45 +1,38 @@
 #include <ESP8266WiFi.h>
-// Netpie
 #include <MicroGear.h>
-// JSON
 #include <ArduinoJson.h>
-// LINE
 #include <TridentTD_LineNotify.h>
 #include <Wire.h>
 #include <time.h>
-// OLED
 #include <ACROBOTIC_SSD1306.h>
-// wifi
-#define SSID_WIFI    "AndroidAPD261"
-#define PASSWORD_WIFI   "mojijosh"
-// Line
+#define WIFI_SSID   "6021607"
+#define WIFI_PASS   "17401449"
 #define LINE_TOKEN  "0lbZcis2QugRyJv6SZaxzcK2STZOkzWqD7TnDqegFbM"
-// Netpie
 #define APPID "smartbins"
 #define KEY "4gb6nh27xR6cc6W"
 #define SECRET "6QIrz3dXFOBNbp4P3hVX6SulZ"
 #define ALIAS "esp8266"
 #define FEEDID "BINSFEEDS1"
-#define INTERVAL 15000
-#define T_INCREMENT 200
-#define T_RECONNECT 5000
-#define BAUD_RATE 115200
-#define MAX_TEMP 100
-#define MAX_HUMID 100
 
-// sensor Ultrasonic
-#define TRIGGER_PIN  D5
-#define ECHO_PIN     D6
+#define TRIG 14
+#define ECHO 12
 
 WiFiClient client;
+//
+float vout = 0.0;
+float vin = 0.0;
+float R1 = 30000;
+float R2 = 7500;
+int value = 0;
 
-// ตัวแปลสำหรับ sensor ทั้งสองตัว
+//
+long duration, distance;
+int cm = 0, bincm = 30;
+int send_cm = 0, send_vin = 0;
+
+//
 int timer = 0;
 char str[32];
-long duration, distance;
-float temp;
-int Read;
-float Val;
 
 /// time NTP server
 struct tm* p_tm;
@@ -48,7 +41,6 @@ char ntp_server2[20] = "fw.eng.ku.ac.th";
 char ntp_server3[20] = "time.uni.net.th";
 int sec;
 String times = "";
-// check รอบการส่งไลน์
 bool checksend = false;
 
 MicroGear microgear(client);
@@ -64,25 +56,38 @@ void setup() {
 
   microgear.on(MESSAGE, onMsghandler);
   microgear.on(CONNECTED, onConnected);
+
   Serial.begin(115200);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  // OLED
   Wire.begin();
-  oled.init();                      // Initialze SSD1306 OLED display
-  oled.clearDisplay();              // Clear screen
-  Serial.println("Starting...");
-  oled.setTextXY(1, 0);             // Set cursor position, start of line 1
-  oled.putString("Starting...");
-  // ส่วนของการเชื่อม wifi
-  WiFi.begin(SSID_WIFI, PASSWORD_WIFI);
+  oled.init();
+  oled.clearDisplay();
+  oled.setTextXY(1, 1);
+  oled.putString("$$SMART BIN$$");
+
+  // Connect to Wifi.
+  Serial.println();
+  Serial.println("-------------------------------------");
+  Serial.println("$$SMART BIN$$");
+  Serial.println("-------------------------------------");
+  Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
-  // เชื่อมต่อ line notify
+  Serial.println();
+
+  //Line notify
   LINE.setToken(LINE_TOKEN);
-  // ส่วนของการเชื่อมต่อ NTP server
+
+  //NTP server
   configTime(7 * 3600, 0, ntp_server1, ntp_server2, ntp_server3);
   Serial.println("\nWaiting for time");
   while (!time(nullptr)) {
@@ -90,85 +95,89 @@ void setup() {
     delay(1000);
   }
   LINE.notify("เชื่อมต่อเรียบร้อย....");
-  // clear  จอ
-  oled.clearDisplay();
-  // netpie
+
+  //netpie
   microgear.init(KEY, SECRET, ALIAS);
   microgear.connect(APPID);
 }
 void loop() {
 
   if (microgear.connected()) {
-    Serial.println("connected");
     microgear.loop();
 
-    time_t time_now = time(nullptr);   // Time
-    p_tm = localtime(&time_now);  // ตัวแปล time
-    sec = p_tm->tm_min; //tm_min // เวลาสปัจุบัญที่เป็นหน่วย นาที เอาใช้สำหรับเช็คการส่ง line
-    times = ctime(&time_now);  // เวลาปัจุบัญที่ได้มาจาก NTP server
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
 
-    DynamicJsonBuffer jsonBuffer;   // กำหนด jsonbuffer แบบ Dynamic(ไม่กำหนดตายตัว ขยายได้เรือยๆ)
-    JsonObject& root = jsonBuffer.createObject(); // สร้าง object มารอรับค่าที่ชื่อว่า root[]
+    time_t time_now = time(nullptr);
+    p_tm = localtime(&time_now);
+    sec = p_tm->tm_min;
+    times = ctime(&time_now);
 
-    // ส่วนของ sensor voltage
-    Read = analogRead(A0); // อ่านค่าจาก senoser มาที่ขา A0 แบบ Analog
-    temp = Read / 5.092;
-    Read = (int)temp;
-    Val = ((Read % 100) / 10.0);  // ค่าที่ได้จากการคำนวนของ sensor
-    //Serial.println("Voltage:" + String(Val));
-    oled.setTextXY(2, 0);             // Set cursor position, start of line 1
-    oled.putString("Volt:" + String(Val));
-
-    // ส่วนของ sensor Ultrasonic
-    pinMode(TRIGGER_PIN, OUTPUT);
-    pinMode(ECHO_PIN, INPUT);
-    digitalWrite(TRIGGER_PIN, LOW);
-    delayMicroseconds(2);
-    digitalWrite(TRIGGER_PIN, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(TRIGGER_PIN, LOW);
-
-    duration = pulseIn(ECHO_PIN, HIGH);
-    distance = duration * 0.034 / 2;
-    if (distance > 30) { // ปกติถังลึก 30 cm ถ้า sensor อ่านได้ เกิน 30 แสดงว่าเกิดค่าที่ error ให้ set ค่ากลับไปเป็น 0
-      distance = 0; // set ให้ = 0
+    //Voltage sensor
+    value = analogRead(A0);
+    vout = (value * 3.0) / 1023.0;
+    vin = vout / (R2 / (R1 + R2));
+    if (vin < 0 ) {
+      vin = 0;
     }
-    //Serial.println(distance);
-    oled.setTextXY(3, 0);             // Set cursor position, start of line 1
-    oled.putString("CM:" + String(distance));
+    //Serial.println("Voltage:" + String(vin));
+    // เข้าสูตร
+    send_vin = (vin * 100) / 5;
+    //Serial.println("Voltage:" + String(send_vin));
+
+    oled.setTextXY(2, 0);
+    oled.putString("Volt:" + String(send_vin));
+    oled.setTextXY(2, 10);
+    oled.putString("%");
+
+    //Ultrasonic sensor
+    digitalWrite(TRIG, LOW);
+    delayMicroseconds(2);
+    digitalWrite(TRIG, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TRIG, LOW);
+    duration = pulseIn(ECHO, HIGH);
+    distance = (duration / 2) / 29.1;
+    cm = (bincm - distance);
+    if (cm < 0 ) {
+      cm = 0;
+    }
+    //Serial.println("distance:" + String(cm));
+    // เข้าสูตร
+    send_cm = (cm * 100) / 30;
+    //Serial.println("send_cm:" + String(send_cm));
+
+    oled.setTextXY(3, 0);
+    oled.putString("CM:" + String(send_cm));
+    oled.setTextXY(3, 10);
+    oled.putString("%");
 
     if ((sec % 5) == 0) {
-      Serial.println("CHECK:" + String(sec));
-      // ถ้า sec ก็คือ หน่วยนาที มันหาร 5 ลงตัว มันจะเข้าเคสนี้ละเช็คต่อว่า ขยะ เต็มมั้ยถ้าเต็ม มันจะส่งไปที่ไลน์ แค่ครั่งเดียว
-      if (distance < 10 && checksend == false) { // เช็คว่า ขยะเต็มมั้ยถ้าเต็ม
-        LINE.notify("ถังขยะเต็ม"); // ส่งไปที่ line
-        Serial.println("Full");
+      //Serial.println(Time:" + String(sec));
+      if (send_cm > 70 && checksend == false) {
+        LINE.notify("ถังขยะเต็ม");
         checksend = true;
       }
     }
-    else { // ถ้าไม่เข้าเคส ข้างบน ให้ reset ตัวแปลการส่ง 1 ครั้ง ให้สามารถส่งใน 5 นาทีถัดไปได้
-      //Serial.println("RESRT:" + String(sec));
+    else {
       checksend = false;
     }
 
-    root["bin"] = distance;  // เอาค่าตัวแปลของ ถังขยะ มาเก็บใส่ json
-    root["voltage"] = Val;  // เอาค่าตัวแปลของ แบต มาเก็บใส่ json
-    String jsonData;
-    root.printTo(jsonData); // จับยัดเข้า object json
-    //Serial.println(jsonData);
-
-    if (timer >= 1000) { // ทุกๆ 1 วิจะทำการส่งค่าไป netpie
-      sprintf(str, "%d,%.2f", distance, Val);  // แสดงค่าที่ได้รับมาจากด้านบน
+    if (timer >= 500) {
+      root["bin"] = send_cm;
+      root["voltage"] = send_vin;
+      String jsonData;
+      root.printTo(jsonData);
+      sprintf(str, "%d,%d", send_cm, send_vin);
       Serial.println(str);
       Serial.print("Sending -- >");
-      microgear.publish("/sensor", str);  // ส่งค่าไปยัง netpie ที่ path/sensor
-      microgear.writeFeed(FEEDID, jsonData); // ส่งไปแบบ json
+      microgear.publish("/sensor", str);
+      microgear.writeFeed(FEEDID, jsonData);
       timer = 0;
     } else {
       timer += 100;
     }
   }
-  //=========================ถ้าต่อไม่ติด==========================
   else {
     Serial.println("connection lost, reconnect...");
     if (timer >= 5000) {
@@ -177,5 +186,5 @@ void loop() {
     }
     else timer += 100;
   }
-  delay(300);
+  delay(150);
 }
