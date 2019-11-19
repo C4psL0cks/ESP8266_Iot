@@ -35,12 +35,12 @@ void loop() {
     bluetooth.write(Serial.read());
   }
   if (bluetooth.available()) {
-    char text = bluetooth.read();
-    Serial.println(text);
-    if (text == 'a') {
-      bluetooth.write("ANS");
-    }
-    //Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
+    //    char text = bluetooth.read();
+    //    Serial.println(text);
+    //    if (text == 'a') {
+    //      bluetooth.write("ANS");
+    //    }
+    Serial.write(bluetooth.read()); // รับค่าจากโทรสับแสดงออก serail
   }
 
 }
