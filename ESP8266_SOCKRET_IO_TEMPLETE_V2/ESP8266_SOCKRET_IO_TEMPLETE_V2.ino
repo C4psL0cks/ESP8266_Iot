@@ -16,9 +16,6 @@ extern String Rcontent;
 char hostip[] = "YOUR_HOST_IP";
 int port = YOUR_PORT_NUMBER;
 
-void setup();
-void loop();
-
 void setup() {
 
   /* [NEED] --- Initial anything that you want --- */
