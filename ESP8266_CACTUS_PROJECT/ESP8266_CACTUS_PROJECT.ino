@@ -4,10 +4,10 @@
 
 SocketIOClient socket;
 
-#define WIFI_SSID   "KANN 2.4 G"
-#define WIFI_PASS   "12345678"
+#define WIFI_SSID   "6021607"
+#define WIFI_PASS   "17401449"
 
-String Hostname = "192.168.1.145";
+String Hostname = "192.168.0.6";
 int Port = 3484;
 
 #define sensor_pin A0
@@ -55,15 +55,18 @@ void setup() {
 
   //get value form node
   // humidity_check
-  socket.on("w", check);
+  socket.on("auto", autos);
   // auto
-  socket.on("a", auto_water);
+  socket.on("switch", switchs);
+  // check
+  socket.on("check",checks);
 
 }
 
 void loop() {
 
-  humidity_sensor = ( 100.00 - ( (analogRead(sensor_pin) / 1023.00) * 100.00 ) );
+  humidity_sensor = 10;
+  //  humidity_sensor = ( 100.00 - ( (analogRead(sensor_pin) / 1023.00) * 100.00 ) );
   Serial.print("Soil Moisture = " + String(humidity_sensor) + "%");
 
   humidity = (humidity_sensor * 100) / 50;
@@ -85,57 +88,67 @@ void loop() {
   delay(1000);
 }
 
-void auto_water(String control) {
-  Serial.println("[control] " + control);
-  if (control.toInt() == 1) {
-    if (humidity < hudimity_check) {
-      Serial.println("[control] ON");
-      digitalWrite(relay, LOW);
-    }
-    else {
-      digitalWrite(relay, HIGH);
-      Serial.println("[control] OFF");
-    }
-  }
-  else {
-    digitalWrite(relay, HIGH);
-    Serial.println("[control] OFF");
-  }
+void autos(String autos){
+   Serial.println("[auto] " + autos);
+}
+void switchs(String switchs){
+   Serial.println("[switch] " + switchs);
+}
+void checks(String checks){
+   Serial.println("[check] " + checks);
 }
 
-void check(String switchs) {
-  Serial.println("[switchs] " + switchs);
-  if (switchs.toInt() == 0) {
-    hudimity_check = 0;
-  }
-  else if (switchs.toInt() == 1) {
-    hudimity_check = 10;
-  }
-  else if (switchs.toInt() == 2) {
-    hudimity_check = 20;
-  }
-  else if (switchs.toInt() == 3) {
-    hudimity_check = 30;
-  }
-  else if (switchs.toInt() == 4) {
-    hudimity_check = 40;
-  }
-  else if (switchs.toInt() == 5) {
-    hudimity_check = 50;
-  }
-  else if (switchs.toInt() == 6) {
-    hudimity_check = 60;
-  }
-  else if (switchs.toInt() == 7) {
-    hudimity_check = 70;
-  }
-  else if (switchs.toInt() == 8) {
-    hudimity_check = 80;
-  }
-  else if (switchs.toInt() == 9) {
-    hudimity_check = 90;
-  }
-  else {
-    hudimity_check = 0;
-  }
-}
+//void auto_water(String control) {
+//  Serial.println("[control] " + control);
+//  if (control.toInt() == 1) {
+//    if (humidity < hudimity_check) {
+//      Serial.println("[control] ON");
+//      digitalWrite(relay, LOW);
+//    }
+//    else {
+//      digitalWrite(relay, HIGH);
+//      Serial.println("[control] OFF");
+//    }
+//  }
+//  else {
+//    digitalWrite(relay, HIGH);
+//    Serial.println("[control] OFF");
+//  }
+//}
+//
+//void check(String switchs) {
+//  Serial.println("[switchs] " + switchs);
+//  if (switchs.toInt() == 0) {
+//    hudimity_check = 0;
+//  }
+//  else if (switchs.toInt() == 1) {
+//    hudimity_check = 10;
+//  }
+//  else if (switchs.toInt() == 2) {
+//    hudimity_check = 20;
+//  }
+//  else if (switchs.toInt() == 3) {
+//    hudimity_check = 30;
+//  }
+//  else if (switchs.toInt() == 4) {
+//    hudimity_check = 40;
+//  }
+//  else if (switchs.toInt() == 5) {
+//    hudimity_check = 50;
+//  }
+//  else if (switchs.toInt() == 6) {
+//    hudimity_check = 60;
+//  }
+//  else if (switchs.toInt() == 7) {
+//    hudimity_check = 70;
+//  }
+//  else if (switchs.toInt() == 8) {
+//    hudimity_check = 80;
+//  }
+//  else if (switchs.toInt() == 9) {
+//    hudimity_check = 90;
+//  }
+//  else {
+//    hudimity_check = 0;
+//  }
+//}
