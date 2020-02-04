@@ -73,8 +73,9 @@ void loop() {
   int sec_s = p_tm->tm_hour; //tm_min
   times = ctime(&time_now);
 
-  sensors.requestTemperatures();
-  float Temperature = 20;
+  sensors.requestTemperatures(); 
+  float Temperature = sensors.getTempCByIndex(0);
+
 
   // show string value
   Serial.println("TimeNow:" + String(times));
