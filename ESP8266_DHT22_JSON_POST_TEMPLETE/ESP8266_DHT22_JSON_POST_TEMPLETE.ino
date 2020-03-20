@@ -29,6 +29,7 @@ void setup() {
   Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
   Serial.println();
+  dht.begin();
 }
 
 void loop() {
