@@ -1,0 +1,26 @@
+https://th.000webhost.com/cpanel-login?from=panel
+
+sumaleeparking@gmail.com (login with gmail)
+parking12345
+===========================
+
+DB
+
+DB host localhost
+DB name id12401785_sumalee
+DB Usename id12401785_root
+DB Password sumaleeroot
+
+==========================
+
+FTP
+
+Host Name: files.000webhost.com
+Port: 21
+Username: sumalee-parking
+Password: 7P*)Ew&5ZxO!^W)HxXUR
+
+
+
+https://sumalee-parking.000webhostapp.com/api-new/apis.php?text=7896890
+
