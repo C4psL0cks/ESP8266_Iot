@@ -2,16 +2,9 @@
 #include <Ticker.h>
 #include <WiFiManager.h>
 #include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266.h>
-#include <TridentTD_LineNotify.h>
-#define BLYNK_PRINT Serial
 #define EEPROM_SALT 12663
 
-int STATUSRELAY;
-int BTRESET;
-
-typedef struct
-{
+typedef struct {
   int salt = EEPROM_SALT;
   char blynkToken[33] = "";
   char lineToken[45] = "";
@@ -19,69 +12,30 @@ typedef struct
 } WMSettings;
 WMSettings settings;
 
-bool BLYNK_ENABLED = true;
-bool LINE_ENABLED = true;
 bool shouldSaveConfig = false;
-bool Reset = false;
 
 WiFiManager wifiManager;
 Ticker ticker;
-WidgetLED LEDCLOSE(V2);
-WidgetLED LEDOPEN(V3);
 
-BLYNK_CONNECTED()
-{
-  Blynk.syncVirtual(V0);
-  Blynk.syncVirtual(V1);
-  Blynk.syncVirtual(V2);
-  Blynk.syncVirtual(V3);
-  Blynk.syncVirtual(V4);
-  Blynk.syncVirtual(V5);
-  Blynk.syncVirtual(V6);
-  Blynk.syncVirtual(V7);
-  Blynk.syncAll();
-}
-
-BLYNK_WRITE(V0)
-{
-  STATUSRELAY = param.asInt();
-  if (STATUSRELAY) {
-    Serial.println("V:" + String(STATUSRELAY));
-  }
-  else {
-    Serial.println("V:" + String(STATUSRELAY));
-  }
-}
-BLYNK_WRITE(V1)
-{
-  BTRESET = param.asInt();
-  if (BTRESET)
-  {
-    Reset = true;
-    resetFactory();
-  }
-}
-
-void tick()
-{
+void tick() {
   int state = digitalRead(BUILTIN_LED);
   digitalWrite(BUILTIN_LED, !state);
 }
-void configModeCallback(WiFiManager *myWiFiManager)
-{
+
+void configModeCallback(WiFiManager *myWiFiManager) {
   Serial.println("Entered config mode");
   Serial.println(WiFi.softAPIP());
   Serial.println(myWiFiManager->getConfigPortalSSID());
   ticker.attach(0.2, tick);
   Serial.println("  Enter Config Wifi ");
 }
-void saveConfigCallback()
-{
+
+void saveConfigCallback() {
   Serial.println("Should save config");
   shouldSaveConfig = true;
 }
-void resetFactory()
-{
+
+void resetFactory() {
   WMSettings defaults;
   settings = defaults;
   EEPROM.begin(512);
@@ -98,13 +52,12 @@ void resetFactory()
   ESP.reset();
   delay(500);
 }
-void setup()
-{
+
+void setup() {
 
   Serial.begin(115200);
   //reset saved settings
   //wifiManager.resetSettings();
-
   pinMode(BUILTIN_LED, OUTPUT);
   ticker.attach(0.6, tick);
 
@@ -115,8 +68,7 @@ void setup()
   EEPROM.get(0, settings);
   EEPROM.end();
 
-  if (settings.salt != EEPROM_SALT)
-  {
+  if (settings.salt != EEPROM_SALT) {
     Serial.println("Invalid settings in EEPROM, trying with defaults");
     WMSettings defaults;
     settings = defaults;
@@ -134,14 +86,13 @@ void setup()
   wifiManager.addParameter(&custom_name_device);
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
-  if (!wifiManager.autoConnect("SMART LOCK ALERT"))
-  {
+  if (!wifiManager.autoConnect("XXX","123456")) {
     Serial.println("failed to connect and hit timeout");
     ESP.reset();
     delay(1000);
   }
-  if (shouldSaveConfig)
-  {
+
+  if (shouldSaveConfig) {
     Serial.println("Saving config");
     strcpy(settings.blynkToken, custom_blynk_token.getValue());
     strcpy(settings.lineToken, custom_line_token.getValue());
@@ -153,44 +104,24 @@ void setup()
     EEPROM.put(0, settings);
     EEPROM.end();
   }
-  if (strlen(settings.blynkToken) == 0)
-  {
-    BLYNK_ENABLED = false;
-  }
-  if (BLYNK_ENABLED)
-  {
-    Blynk.config(settings.blynkToken);
-  }
-  if (strlen(settings.lineToken) == 0)
-  {
-    LINE_ENABLED = false;
-  }
-  if (LINE_ENABLED)
-  {
-    LINE.setToken(settings.lineToken);
-  }
+
+
   Serial.println("connected...Success :)");
   ticker.detach();
   digitalWrite(BUILTIN_LED, LOW);
+  Serial.println(String(settings.namedevice) + " Connect Finish!!");
+  Serial.println("!! Online !!");
 
-  if (LINE_ENABLED)
-  {
-    LINE.notify(String(settings.namedevice) + " Connect Finish!!");
-    LINE.notify("!! Online !!");
-    LINE.notify("Start..");
-  }
-  if (BLYNK_ENABLED)
-  {
-    Blynk.notify(String(settings.namedevice) + " Connect Finish !!");
-    Blynk.notify("!! Online !!");
-    Blynk.notify("Start..");
-  }
 }
-void loop()
-{
 
-  if (BLYNK_ENABLED)
-  {
-    Blynk.run();
+void loop() {
+
+  if (Serial.available() > 0) {
+    int number = Serial.parseInt();
+    Serial.println("Select :" + String(number));
+    if (number == 1) {
+      resetFactory();
+      Serial.println("Reset");
+    }
   }
 }
