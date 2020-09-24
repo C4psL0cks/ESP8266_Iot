@@ -1,4 +1,4 @@
-# [Arduino](https://github.com/C4psL0cks/ESP8266)
+# [ESP8266](https://github.com/C4psL0cks/ESP8266)
 
 
 ## Status
