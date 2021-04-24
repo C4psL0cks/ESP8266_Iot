@@ -1,8 +1,5 @@
 # [ESP8266](https://github.com/C4psL0cks/ESP8266)
 
-
-## Status
-
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/BlackrockDigital/startbootstrap-sb-admin-2/master/LICENSE)
 [![npm version](https://img.shields.io/npm/v/startbootstrap-sb-admin-2.svg)](https://www.npmjs.com/package/startbootstrap-sb-admin-2)
 [![Build Status](https://travis-ci.org/BlackrockDigital/startbootstrap-sb-admin-2.svg?branch=master)](https://travis-ci.org/BlackrockDigital/startbootstrap-sb-admin-2)
@@ -16,7 +13,7 @@ To begin using this template, choose one of the following options to get started
 -   Install via npm: `npm i `
 -   Clone the repo: `git clone https://github.com/C4psL0cks/ESP8266 `
 
-## การใช้งานเริ่มต้น ESP8266 NodeMCU และการใช้งาน Application ต่างๆ
+## การใช้งานเริ่มต้นและการใช้งาน Application ต่างๆ
 
 - แหล่งรวบรวม iot และเผยแพร่ สำหรับผู้สนใจนำไปต่อยอด โดยสามารถใช้ได้กับ ESP8266 และ ESP32    
 - การใช้งาน LINE API 
