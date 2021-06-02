@@ -4,8 +4,9 @@
 #include <BlynkSimpleEsp8266.h>
 #include <TridentTD_LineNotify.h>
 #define BLYNK_PRINT Serial
-#define WIFI_SSID  "6021607"
-#define WIFI_PASSWORD "17401449"
+
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define BLYNKTOKEN  "2542d4b02a2b4b2a9b707b9ec4ae4aaa"
 #define LINETOKEN  "UyNN7O9AMK6qmW8kjb7K0bK5WRVF7tE52jw1aJ77ysy"
 #define EEPROM_SALT 12663

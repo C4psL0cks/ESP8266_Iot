@@ -4,8 +4,8 @@
 
 SocketIOClient socket;
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 
 String Hostname = "192.168.0.6";
 int Port = 3484;

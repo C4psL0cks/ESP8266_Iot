@@ -11,8 +11,9 @@ DHT dht(DHTPIN, DHTTYPE);
 #include <BH1750FVI.h>
 BH1750FVI LightSensor(BH1750FVI::k_DevModeContLowRes);
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID "dlink-ABD0"
+#define WIFI_PASS "yyafr68490"
+
 #define FIREBASE_HOST "smart-light-4abfa.firebaseio.com"
 #define FIREBASE_AUTH "5QpQeZTYBvt4JCeJmv2BlG0KmGpq3MrdFwMRRSxJ"
 

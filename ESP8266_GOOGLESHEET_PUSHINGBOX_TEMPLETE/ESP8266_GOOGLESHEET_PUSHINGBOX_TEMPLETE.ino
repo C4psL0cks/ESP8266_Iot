@@ -4,8 +4,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+
+#define WIFI_SSID "dlink-ABD0"
+#define WIFI_PASS "yyafr68490"
 
 const char* host = "api.pushingbox.com";
 const String devid = "v9BAE38FD0936517";

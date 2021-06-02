@@ -7,8 +7,8 @@
 
 #define DHTPIN D4
 #define DHTTYPE DHT22
-#define SSID "--------------------"
-#define PASSWORD "--------------------"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define LINE_TOKEN "--------------------"
 
 DHT dht(DHTPIN, DHTTYPE);

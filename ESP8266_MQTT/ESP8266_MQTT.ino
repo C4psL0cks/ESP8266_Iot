@@ -3,8 +3,9 @@
 
 // Update these with values suitable for your network.
 
-const char* ssid = "6021607";
-const char* password = "17401449";
+
+#define WIFI_SSID "dlink-ABD0"
+#define WIFI_PASS "yyafr68490"
 const char* mqtt_server = "soldier.cloudmqtt.com";
 
 WiFiClient espClient;
@@ -15,25 +16,26 @@ int value = 0;
 
 void setup_wifi() {
 
-  delay(10);
-  // We start by connecting to a WiFi network
+  Serial.begin(115200);
   Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
+  Serial.println("-------------------------------------");
+  Serial.println("Running!");
+  Serial.println("-------------------------------------");
+  // Connect to Wifi.
+  Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
+  Serial.printf("\nWiFi connected\nIP : ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
 
   randomSeed(micros());
 
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {

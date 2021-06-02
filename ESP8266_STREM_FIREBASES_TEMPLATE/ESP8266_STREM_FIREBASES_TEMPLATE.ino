@@ -8,8 +8,8 @@
 #define FIREBASE_AUTH "RX91Pa9yoE5UNa50tPUjPOGT3O0A9WOv9ZFLntpX"
 
 // Config connect WiFi
-#define WIFI_SSID "6021607"
-#define WIFI_PASSWORD "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 int state;
 
 void setup() {

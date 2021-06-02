@@ -5,8 +5,8 @@
 #include <Wire.h>
 #include <time.h>
 #include <ACROBOTIC_SSD1306.h>
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define LINE_TOKEN  "0lbZcis2QugRyJv6SZaxzcK2STZOkzWqD7TnDqegFbM"
 #define APPID "smartbins"
 #define KEY "4gb6nh27xR6cc6W"

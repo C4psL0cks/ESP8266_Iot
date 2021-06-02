@@ -17,8 +17,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 
 
 //กำหนดค่า wifi password linetoken sensorpin
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define LINE_TOKEN  "VOwca6uoY6T5vR6A43J7zwg2PtOWG2z4wGvgTLFsN3u"
 #define sensor1 14
 #define sensor2 12

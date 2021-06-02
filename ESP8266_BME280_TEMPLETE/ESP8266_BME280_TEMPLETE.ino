@@ -7,8 +7,8 @@
 #include <Adafruit_BME280.h>
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 
 Adafruit_BME280 bme;
 bool status;

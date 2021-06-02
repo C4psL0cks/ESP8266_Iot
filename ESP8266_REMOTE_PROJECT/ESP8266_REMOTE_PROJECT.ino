@@ -14,8 +14,9 @@
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
 
-const char* ssid = "6021607";
-const char* password = "17401449";
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
+
 char Name[20] = "";
 MDNSResponder mdns;
 
@@ -186,20 +187,22 @@ void setup(void) {
   irsend.begin();
 
   Serial.begin(115200);
-  WiFi.begin(ssid, password);
-  Serial.println("");
-
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
+  Serial.println();
+  Serial.println("-------------------------------------");
+  Serial.println("Running!");
+  Serial.println("-------------------------------------");
+  // Connect to Wifi.
+  Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
-
+  Serial.println();
   if (mdns.begin("esp8266", WiFi.localIP())) {
     Serial.println("MDNS responder started");
   }

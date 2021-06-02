@@ -7,8 +7,8 @@
 
 DHT dht(DHTPIN, DHTTYPE);
 
-const char *WIFISSID = "6021607";
-const char *PASSWORD = "17401449";
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 const char *host = "192.168.0.3";
 
 int value = 0;

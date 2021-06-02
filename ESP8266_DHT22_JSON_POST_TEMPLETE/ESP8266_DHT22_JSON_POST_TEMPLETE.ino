@@ -4,8 +4,8 @@
 #include "DHT.h"
 #define DHTPIN 4
 #define DHTTYPE DHT22
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 
 DHT dht(DHTPIN, DHTTYPE);
 HTTPClient http;

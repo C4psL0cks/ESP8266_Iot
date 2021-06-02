@@ -4,8 +4,10 @@
 // Set these to run example.
 #define FIREBASE_HOST "espdemo-6518c.firebaseio.com"
 #define FIREBASE_AUTH "YhIZkV7dc8UGALQFalhwxRjqbihIDCM9SVcQoN2s"
-#define WIFI_SSID "Jomson"
-#define WIFI_PASSWORD "jomsonc007"
+
+#define WIFI_SSID "dlink-ABD0"
+#define WIFI_PASS "yyafr68490"
+
 String getuid = "xxxx";
 int OTP, OTPS;
 String token = "111";

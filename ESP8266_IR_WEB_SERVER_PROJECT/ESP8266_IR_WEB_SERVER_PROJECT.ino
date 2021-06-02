@@ -9,8 +9,9 @@
 #include <FirebaseArduino.h>
 #define FIREBASE_HOST "xx"
 #define FIREBASE_AUTH "xxx"
-#define WIFI_SSID "xxx"
-#define WIFI_PASSWORD "xxx"
+
+#define WIFI_SSID "dlink-ABD0"
+#define WIFI_PASS "yyafr68490"
 
 const int LED_PIN1 = D6;
 const int LED_PIN2 = D3;

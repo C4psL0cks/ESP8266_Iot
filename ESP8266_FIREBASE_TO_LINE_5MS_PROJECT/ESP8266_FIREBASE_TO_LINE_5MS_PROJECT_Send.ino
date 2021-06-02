@@ -10,9 +10,8 @@ DHT dht(DHTPIN, DHTTYPE);
 
 #define FIREBASE_HOST "xxxx-xxxx.firebaseio.com"
 #define FIREBASE_AUTH "xxxx"
-
-#define WIFI_SSID "xxxx" //แก้ไข
-#define WIFI_PASSWORD "xxxx" //แก้ไข
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 
 #define LINE_TOKEN "xxxxx"
 
@@ -39,20 +38,23 @@ bool checkPressure = false;
 void setup() {
 
   Serial.begin(115200);
-
   pinMode(sensorPin, INPUT);
-  WiFi.mode(WIFI_STA);// connect to wifi.
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("connecting");
-
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-  }
   Serial.println();
-  Serial.print("connected: ");
+  Serial.println("-------------------------------------");
+  Serial.println("Running!");
+  Serial.println("-------------------------------------");
+  // Connect to Wifi.
+  Serial.println();
+  WiFi.mode(WIFI_STA);// connect to wifi.
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.printf("\nWiFi connected\nIP : ");
   Serial.println(WiFi.localIP());
-
+  Serial.println();
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   LINE.setToken(LINE_TOKEN);
 

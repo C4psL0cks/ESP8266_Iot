@@ -8,9 +8,8 @@
 #include <Adafruit_BME280.h>
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
-
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 // Corlysis Setting - click to the database to get those info
 const char* db_name = "sensor_db";
 const char* db_password = "1f7bad37f797bb8119fd164e66a1a936";

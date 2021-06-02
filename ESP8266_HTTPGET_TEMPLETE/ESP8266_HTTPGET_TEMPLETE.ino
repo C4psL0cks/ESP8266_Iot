@@ -1,12 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
+
 
 HTTPClient http;
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   Serial.println();
   Serial.println("-------------------------------------");
@@ -16,7 +18,8 @@ void setup() {
   Serial.println();
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   Serial.printf("WiFi Connecting to %s\n", WIFI_SSID);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
@@ -25,12 +28,15 @@ void setup() {
   Serial.println();
 }
 
-void loop() {
+void loop()
+{
 
-  if (WiFi.status() == WL_CONNECTED) {
+  if (WiFi.status() == WL_CONNECTED)
+  {
     http.begin("http://jsonplaceholder.typicode.com/users/1");
     int HTTP_CODE = http.GET();
-    if (HTTP_CODE > 0) {
+    if (HTTP_CODE > 0)
+    {
       String payload = http.getString();
       Serial.println(payload);
     }

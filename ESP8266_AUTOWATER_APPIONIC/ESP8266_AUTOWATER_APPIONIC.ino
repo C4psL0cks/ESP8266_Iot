@@ -11,8 +11,8 @@
 #define analogPin A0
 #define FIREBASE_HOST "water-b5fc4-default-rtdb.firebaseio.com"
 #define FIREBASE_AUTH "bGpEOLvK1WLIk9AvWC3KYZ3S4eRYXBNA4qYm6St2"
-#define WIFI_SSID "dlink-ABD0"
-#define WIFI_PASSWORD "yyafr68490"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 //#define LINE_TOKEN "VOwca6uoY6T5vR6A43J7zwg2PtOWG2z4wGvgTLFsN3u"
 
 struct tm* p_tm;

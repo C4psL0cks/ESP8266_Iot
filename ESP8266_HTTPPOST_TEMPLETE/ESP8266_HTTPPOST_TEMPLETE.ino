@@ -2,12 +2,13 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 
 HTTPClient http;
 
 void setup() {
+  
   Serial.begin(115200);
   Serial.println();
   Serial.println("-------------------------------------");
@@ -36,10 +37,10 @@ void loop() {
 
 void report(double value1, double value2, double value3) {
 
-  StaticJsonBuffer<300> JSONbuffer;   
+  StaticJsonBuffer<300> JSONbuffer;
   JsonObject& JSONencoder = JSONbuffer.createObject();
 
-  JSONencoder["value1"] = value1;
+  JSONencoder["temperature"] = value1;
   JSONencoder["value2"] = value2;
   JSONencoder["value3"] = value3;
 
@@ -50,12 +51,12 @@ void report(double value1, double value2, double value3) {
 
   if (WiFi.status() == WL_CONNECTED) {
 
-    http.begin("http://xxx");                                                                                           
+    http.begin("http://192.168.0.106/apiesp8266/public/apis3.php");
     http.addHeader("User-Agent", "ESP8266HTTPClient");
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Accept", "application/json");
     http.addHeader("Connection", "close");
-    
+
     int HTTP_CODE = http.POST(JSONmessageBuffer);
     if (HTTP_CODE > 0) {
       Serial.printf("[HTTP] POST... code: %d\n", HTTP_CODE);
@@ -67,11 +68,11 @@ void report(double value1, double value2, double value3) {
         Serial.println(payload);
       }
     }
-    else{
+    else {
       Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(HTTP_CODE).c_str());
     }
     http.end();
     Serial.println("Reported!");
   }
-  delay(1000);                                                                       
+  delay(1000);
 }

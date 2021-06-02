@@ -8,8 +8,8 @@
 #define LED2 D2
 #define relaychanal1 D3
 #define relaychanal2 D4
-#define WIFI_SSID "6021607"
-#define WIFI_PASS "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define BLYNK_TOKEN "c8ffe0bf829d4e13a15c8430f2ff70e2"
 
 /// NTP time

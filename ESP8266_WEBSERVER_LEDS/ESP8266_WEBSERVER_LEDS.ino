@@ -1,8 +1,7 @@
 #include <ESP8266WiFi.h>
 
-#define SSID "--------------------"
-#define PASSWORD "--------------------"
-
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 int ledPin = D7; // GPIO13 Arduino = D7 NodeMCU
 
 WiFiServer server(80);

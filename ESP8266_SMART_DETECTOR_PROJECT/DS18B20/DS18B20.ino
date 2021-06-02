@@ -9,8 +9,8 @@ const int oneWireBus = 4;
 OneWire oneWire(oneWireBus);
 DallasTemperature sensors(&oneWire);
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define FIREBASE_HOST "database-ionic-b75b9.firebaseio.com"
 #define FIREBASE_AUTH "UU5t80yfVMjP9AuGfVE3hCAxrvHcUBwbA0QA0wMa"
 #define LINE_TOKEN "Pxyqm9ugwNVtIsWdPoHNXyib2b6crb7cSRPRKrWgiR3"

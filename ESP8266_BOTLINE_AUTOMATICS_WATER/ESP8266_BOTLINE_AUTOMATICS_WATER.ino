@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <FirebaseArduino.h>
 
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define FIREBASE_HOST "automatics-hamako.firebaseio.com"
 #define FIREBASE_AUTH "yo9a6i3xDI8k1b1pYsMeSq0h4q4WKzQUh30JXLQh"
 

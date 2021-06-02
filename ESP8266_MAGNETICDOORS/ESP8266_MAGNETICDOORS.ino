@@ -4,8 +4,9 @@
 #define ledGpioPin D2
 #define closed 0
 #define opened 1
-#define WIFI_SSID   "6021607"
-#define WIFI_PASS   "17401449"
+
+#define WIFI_SSID "dlink-ABD0"
+#define WIFI_PASS "yyafr68490"
 
 int doorState = 0;
 int ledState = 0;

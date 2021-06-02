@@ -5,8 +5,8 @@
 #include <ESP8266HTTPClient.h>
 #include <TridentTD_LineNotify.h>
 #define BLYNK_PRINT Serial
-#define WIFI_SSID  "6021607"
-#define WIFI_PASSWORD "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define BLYNKTOKEN  "2542d4b02a2b4b2a9b707b9ec4ae4aaa"
 #define LINETOKEN  "iELJyY0I2bbTsMvEW2ODsht1KVsfzysNfdxrghBFvMu"
 #define EEPROM_SALT 12663

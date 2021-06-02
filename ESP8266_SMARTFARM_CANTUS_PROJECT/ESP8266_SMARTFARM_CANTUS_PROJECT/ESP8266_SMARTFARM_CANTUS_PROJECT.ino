@@ -9,8 +9,8 @@
 #define CLOCK_PIN D5
 #define MOSI_PIN D7
 #define MISO_PIN D6
-#define WIFI_SSID "6021607"
-#define WIFI_PASS  "17401449"
+#define WIFI_SSID   "dlink-ABD0"
+#define WIFI_PASS   "yyafr68490"
 #define LINE_TOKEN  "vMIl5g0XKEPgMZdQCPeff8DKiYLE7jgrRpfRptZikrx"
 #define relaypinIN1_Water D0
 #define relaypinIN2_Fan D1
