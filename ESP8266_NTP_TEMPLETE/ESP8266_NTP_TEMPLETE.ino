@@ -1,3 +1,15 @@
+// struct tm {
+//    int tm_sec;         /* วินาที,  range 0 to 59          */
+//    int tm_min;         /* นาที, range 0 to 59           */
+//    int tm_hour;        /* ชั่วโมง, range 0 to 23             */
+//    int tm_mday;        /* วันที่, range 1 to 31  */
+//    int tm_mon;         /* เดือน, range 0 to 11             */
+//    int tm_year;        /* ปีคริสศักราช ตั้งแต่ 1900   */
+//    int tm_wday;        /* วัน, range 0 to 6    */
+//    int tm_yday;        /* วันใน 1 ปี, range 0 to 365  */
+//    int tm_isdst;       /* daylight saving time             */
+// };
+
 #include <time.h>
 #include <ESP8266WiFi.h>
 #include <TridentTD_LineNotify.h>
